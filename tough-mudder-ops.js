@@ -51,12 +51,15 @@
 
   const LABEL_ENTRIES = [
     ['Myron Grant', '1'],
+    ['Nathan Chang', '2'],
     ['Burak Avacik', '3'],
     ['William Mui', '4'],
     ['Bryan Sogelau', '5'],
     ["Ja'meisha R", '6'],
     ['Christian Surguy', '7'],
     ['Jasmine Martinez', '8'],
+    ['Joshua Ahanonu', '9'],
+    ['Diaviaun Agee', '10'],
     ['Eric Rodriguez', '11'],
     ['Adrian Galloway', '12'],
     ['Jack Ellis', '13'],
@@ -69,6 +72,7 @@
     ['Dhanasekar Jayanthi', '20'],
     ['Casey Pollock', '21'],
     ['Jadrien Malakai Lopez', '22'],
+    ['Oscar Duran', '23'],
     ['William Robinson III', '24'],
     ['Matthew Nguyen', '25'],
     ['Kanishka Tikoo', '26'],
@@ -81,7 +85,7 @@
     ['Bobbi Brown', '33'],
     ['Ty-Reese Raney', '34'],
     ['Avantika Deo', '35'],
-    ['Nathan Chang', '36'],
+    ['Terryn Williams', '36'],
     ['Jamir Brown-Anderson', '37'],
     ['Prasidhu Loya', '38'],
     ['Andrew Trujillo', '39'],
@@ -94,7 +98,9 @@
     ['Osato Uwoghiren', '46'],
     ['Harold Mark Esguerra', '47'],
     ['Jason Thomas', '48'],
-    ['Joel Polanco-Canales', '49']
+    ['Joel Polanco-Canales', '49'],
+    ['Marion Morehead', '50'],
+    ['Dimitric Robertson', '51']
   ];
 
   const ANNOUNCER_REMINDERS = [
@@ -130,7 +136,9 @@
     LABEL_ENTRIES.forEach(([name, locker]) => {
       addLabelLookup(lookup, name, locker);
       const parts = name.trim().split(/\s+/);
-      if (parts.length === 2 && parts[1].length > 1) addLabelLookup(lookup, `${parts[0]} ${parts[1][0]}`, locker);
+      parts.slice(1).forEach(part => {
+        if (part.length > 1) addLabelLookup(lookup, `${parts[0]} ${part[0]}`, locker);
+      });
     });
     return lookup;
   })();
@@ -826,6 +834,10 @@
       .sort((a, b) => b.total - a.total || Number(a.locker) - Number(b.locker));
   }
 
+  function hasActivity(operator) {
+    return operator.total > 0 || Number(operator.sessions || 0) > 0;
+  }
+
   function paceStatus(projectedHours, totalHours) {
     if (projectedHours == null) return ['WAITING', 'waiting'];
     if (projectedHours >= C.targetHours) return ['ON PACE', 'good'];
@@ -886,7 +898,7 @@
       #${C.overlayId} .title-card{position:absolute;z-index:8;left:16px;top:14px;display:block;color:#09243a;text-shadow:0 1px 0 rgba(255,255,255,.65)}
       #${C.overlayId} .title{font-size:clamp(24px,2.7vw,42px);line-height:.9;font-weight:1000;letter-spacing:.01em;text-transform:uppercase}
       #${C.overlayId} .crew{display:block;margin-top:4px;font-size:10px;font-weight:1000;letter-spacing:.16em}
-      #${C.overlayId} .controls{position:fixed;right:6px;top:-5px;z-index:9;display:flex;width:var(--rank-board-w);justify-content:flex-end;gap:2px}
+      #${C.overlayId} .controls{position:fixed;right:6px;top:5px;z-index:9;display:flex;width:var(--rank-board-w);justify-content:flex-end;gap:2px}
       #${C.overlayId} .course-wrap{position:absolute;left:0;right:calc(var(--rank-board-w) + 56px);top:82px;bottom:10px;overflow:hidden;border:0;border-radius:0;background:#83b80d url("${C.grassBackgroundUrl}") 0 0/220px 220px repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
       #${C.overlayId} .course-track{position:absolute;left:0;right:0;top:0;bottom:12px;overflow:hidden;border-radius:0;background:#83b80d;background-image:linear-gradient(rgba(31,91,24,.18),rgba(31,91,24,.18)),url("${C.grassBackgroundUrl}");background-position:0 0,0 0;background-size:100% 100%,220px 220px;background-repeat:no-repeat,repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
       #${C.overlayId} .segment{position:absolute;top:0;bottom:0;border-left:0;border-right:0}
@@ -1149,7 +1161,7 @@
   function rowsHtml(operators, rankByLocker) {
     const now = new Date();
     const rows = operators
-      .filter(operator => operator.total > 0 && !operator.inactive)
+      .filter(operator => hasActivity(operator) && !operator.inactive)
       .sort((a, b) => Number(a.locker) - Number(b.locker));
     if (!rows.length) {
       return '<div class="row"><span style="grid-column:1/-1">Awaiting active operators.</span></div>';
@@ -1283,8 +1295,8 @@
     const timestamp = payload.timestamp;
     const operators = markActivity(payload.operators);
     const now = new Date();
-    const started = operators.some(operator => operator.total > 0);
-    const activeOperators = operators.filter(operator => operator.total > 0 && !operator.inactive);
+    const started = operators.some(hasActivity);
+    const activeOperators = operators.filter(operator => hasActivity(operator) && !operator.inactive);
     const totalHours = activeOperators.reduce((sum, operator) => sum + operator.total, 0);
     const averageHours = activeOperators.length ? totalHours / activeOperators.length : 0;
     const hold = courseHold(now, started);
