@@ -104,9 +104,9 @@
   ];
 
   const ANNOUNCER_REMINDERS = [
-    { expression: 'starry', text: "Today's sponsor is the Inventory Team. Keep the pit lane clean: only one bin per station!" },
-    { expression: 'laugh', text: "Today's race is brought to you by SNACK! Fuel up, don't stock up. The snack table has a pit crew too!" },
-    { expression: 'starry', text: "Today's race is brought to you by Shift Coordinators, the task experts keeping this track moving!" }
+    { expression: 'starry', text: "Today's Sponsor is the Inventory Team. We are here to remind you one bin at your station." },
+    { expression: 'laugh', text: "Today's Race is brought to you by SNACK! Fuel Up, Don't Stock Up!" },
+    { expression: 'starry', text: "Today's Race is brought to you by Shift Coordinators...The Task Experts!" }
   ];
 
   const normalizeNameKey = value => String(value ?? '').trim().replace(/\s+/g, ' ').toLowerCase();
@@ -960,7 +960,7 @@
       #${C.overlayId} .changed{animation:rolChanged .7s ease}
       #${C.overlayId} .announcer-panel{--announcer-size:min(var(--rank-board-w),calc(100vh - 610px));position:fixed;right:12px;bottom:10px;z-index:7;width:var(--announcer-size);height:var(--announcer-size);min-width:190px;min-height:190px;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 42% 28%,rgba(23,59,120,.75) 0,rgba(7,26,58,.75) 58%,rgba(3,11,29,.75) 100%);border:4px solid rgba(191,219,254,.72);box-shadow:0 16px 26px rgba(0,0,0,.42),0 5px 0 rgba(2,6,23,.34),0 0 18px rgba(59,130,246,.24),inset 0 0 0 4px rgba(255,255,255,.07);animation:rolAnnouncerPop .45s ease both}
       #${C.overlayId} .announcer-panel:before{content:"";position:absolute;inset:7px;border-radius:50%;border:1px solid rgba(147,197,253,.34);pointer-events:none}
-      #${C.overlayId} .announcer-bubble{position:absolute;left:8%;top:calc(7% + 5px);z-index:3;width:84%;min-height:24%;padding:8px 10px;border:2px solid #071a3a;border-radius:17px;background:#f8fbff;color:#071a3a;font-size:clamp(9px,calc(var(--announcer-size) * .045),13px);line-height:1.06;font-weight:1000;text-align:center;text-transform:none;letter-spacing:.01em;box-shadow:0 4px 0 rgba(2,6,23,.28);animation:rolBubblePop .36s ease both}
+      #${C.overlayId} .announcer-bubble{position:absolute;left:11%;top:calc(10% + 5px);z-index:3;width:78%;min-height:24%;padding:8px 10px;border:2px solid #071a3a;border-radius:17px;background:#f8fbff;color:#071a3a;font-size:clamp(9px,calc(var(--announcer-size) * .045),13px);line-height:1.06;font-weight:1000;text-align:center;text-transform:none;letter-spacing:.01em;box-shadow:0 4px 0 rgba(2,6,23,.28);animation:rolBubblePop .36s ease both}
       #${C.overlayId} .announcer-bubble:after{content:"";position:absolute;left:45%;bottom:-10px;width:15px;height:15px;background:#f8fbff;border-right:2px solid #071a3a;border-bottom:2px solid #071a3a;transform:rotate(45deg)}
       #${C.overlayId} .announcer-title{position:absolute;left:0;right:0;bottom:5%;z-index:4;color:#bfdbfe;font-size:clamp(7px,calc(var(--announcer-size) * .034),10px);line-height:1.05;font-weight:1000;letter-spacing:.11em;text-align:center;text-transform:uppercase;text-shadow:0 2px 0 #020617}
       #${C.overlayId} .announcer-figure{position:absolute;left:50%;bottom:calc(1% - 18px);z-index:2;width:calc(80% + 3px);height:calc(72% + 3px);transform:translateX(-50%);background-image:url("${C.commentatorUrls.thinking}");background-repeat:no-repeat;background-position:center bottom;background-size:contain;filter:drop-shadow(0 8px 7px rgba(0,0,0,.38))}
@@ -968,8 +968,8 @@
       #${C.overlayId} .announcer-figure[data-expression="thinking"]{background-image:url("${C.commentatorUrls.thinking}")}
       #${C.overlayId} .announcer-figure[data-expression="bored"]{background-image:url("${C.commentatorUrls.bored}")}
       #${C.overlayId} .announcer-figure[data-expression="shocked"]{background-image:url("${C.commentatorUrls.shocked}")}
-      #${C.overlayId} .announcer-figure[data-expression="starry"]{background-image:url("${C.commentatorUrls.starry}"),url("${C.commentatorUrls.thinking}")}
-      #${C.overlayId} .announcer-figure[data-expression="laugh"]{background-image:url("${C.commentatorUrls.laugh}"),url("${C.commentatorUrls.excited}")}
+      #${C.overlayId} .announcer-figure[data-expression="starry"]{bottom:calc(1% - 13px);width:calc(90% + 3px);height:calc(81% + 3px);background-image:url("${C.commentatorUrls.starry}")}
+      #${C.overlayId} .announcer-figure[data-expression="laugh"]{bottom:calc(1% - 13px);width:calc(90% + 3px);height:calc(81% + 3px);background-image:url("${C.commentatorUrls.laugh}")}
       #${C.overlayId} .msg{position:fixed;right:14px;bottom:14px;z-index:6;max-width:440px;border:1px solid rgba(254,202,202,.82);border-radius:8px;padding:12px 14px;color:#fecaca;background:rgba(127,29,29,.96);font-size:13px;font-weight:900;box-shadow:0 14px 34px rgba(0,0,0,.32)}
       #${C.overlayId} .host-card{position:fixed;left:50%;top:50%;z-index:7;width:min(520px,calc(100vw - 32px));transform:translate(-50%,-50%);border:1px solid rgba(125,211,252,.32);border-radius:8px;padding:18px;color:#e0f2fe;background:#0b172a;box-shadow:0 22px 54px rgba(0,0,0,.45)}
       #${C.overlayId} .host-card h2{margin:0 0 8px;font-size:22px}
