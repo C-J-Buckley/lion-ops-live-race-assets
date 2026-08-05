@@ -934,7 +934,7 @@
       #${C.overlayId} .final-countdown.is-active{display:grid;animation:rolFinalPop .38s steps(3) both}
       #${C.overlayId} .board{position:fixed;z-index:5;right:12px;top:50px;width:var(--rank-board-w);max-height:620px;overflow:hidden;border:2px solid rgba(15,23,42,.48);border-radius:8px;background:rgba(9,31,48,.9);color:#f8fafc;box-shadow:0 16px 30px rgba(0,0,0,.28)}
       #${C.overlayId} .board-title{padding:7px 9px 5px;font-size:13px;line-height:1;font-weight:1000;text-transform:uppercase;letter-spacing:.08em;background:rgba(2,6,23,.45)}
-      #${C.overlayId} .board-summary{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid rgba(255,255,255,.16);border-bottom:1px solid rgba(255,255,255,.16)}
+      #${C.overlayId} .board-summary{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid rgba(255,255,255,.16);border-bottom:1px solid rgba(255,255,255,.16)}
       #${C.overlayId} .board-summary div{padding:5px 6px;text-align:center;border-right:1px solid rgba(255,255,255,.14)}
       #${C.overlayId} .board-summary div:last-child{border-right:0}
       #${C.overlayId} .board-summary b{display:block;color:#a5f3fc;font-size:8px;letter-spacing:.08em;text-transform:uppercase}#${C.overlayId} .board-summary strong{display:block;font-size:15px;line-height:1.1}
@@ -1044,6 +1044,7 @@
         <section class="board" aria-label="Operator score board">
           <div class="board-title">Score Board</div>
           <div class="board-summary">
+            <div><b>Total Ops</b><strong id="rol-total-ops">0</strong></div>
             <div><b>Total Hrs.</b><strong id="rol-total-hours">0.00</strong></div>
             <div><b>Avg. Hrs.</b><strong id="rol-avg-hours">0.00</strong></div>
           </div>
@@ -1290,6 +1291,7 @@
 
     $(C.overlayId)?.classList.toggle('is-paused', Boolean(hold));
     $(C.overlayId)?.classList.toggle('is-finish-flash', finishFlashActive(now));
+    $('rol-total-ops').textContent = String(activeOperators.length);
     $('rol-total-hours').textContent = totalHours.toFixed(2);
     $('rol-avg-hours').textContent = averageHours.toFixed(2);
     $('rol-course').innerHTML = `
