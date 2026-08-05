@@ -917,9 +917,9 @@
       #${C.overlayId}.is-finish-flash .finish-line{animation:rolFinishFlash 1.4s steps(4) 2}
       #${C.overlayId} .lane{position:absolute;left:0;right:0;height:12px;border-bottom:0}
       #${C.overlayId} .lane-label{display:none}
-      #${C.overlayId} .runner{position:absolute;top:-17px;left:min(calc(var(--progress) * 1%),calc(100% - 11px));width:44px;height:44px;transform:translateX(-50%);z-index:2}
-      #${C.overlayId} .locker-badge{position:absolute;left:-24px;top:19px;z-index:0;min-width:24px;height:15px;padding:0 4px;border:1px solid rgba(15,23,42,.52);border-radius:4px;color:#fff;background:rgba(15,23,42,.82);box-shadow:3px 3px 0 rgba(0,0,0,.32);font-size:10px;line-height:14px;font-weight:1000;text-align:center;text-shadow:1px 1px 0 #000}
-      #${C.overlayId} .sprite{position:relative;z-index:1;width:44px;height:44px;background-image:url("${C.robotSpriteUrl}");background-repeat:no-repeat;background-size:400% 500%;background-position-x:var(--frame-x,0%);background-position-y:25%}
+      #${C.overlayId} .runner{--runner-size:clamp(26px,3.4vh,44px);position:absolute;top:calc(var(--runner-size) * -.38);left:min(calc(var(--progress) * 1%),calc(100% - 11px));width:var(--runner-size);height:var(--runner-size);transform:translateX(-50%);z-index:2}
+      #${C.overlayId} .locker-badge{position:absolute;left:calc(var(--runner-size) * -.55);top:calc(var(--runner-size) * .43);z-index:0;min-width:calc(var(--runner-size) * .55);height:calc(var(--runner-size) * .34);padding:0 4px;border:1px solid rgba(15,23,42,.52);border-radius:4px;color:#fff;background:rgba(15,23,42,.82);box-shadow:3px 3px 0 rgba(0,0,0,.32);font-size:clamp(7px,calc(var(--runner-size) * .23),10px);line-height:calc(var(--runner-size) * .31);font-weight:1000;text-align:center;text-shadow:1px 1px 0 #000}
+      #${C.overlayId} .sprite{position:relative;z-index:1;width:var(--runner-size);height:var(--runner-size);background-image:url("${C.robotSpriteUrl}");background-repeat:no-repeat;background-size:400% 500%;background-position-x:var(--frame-x,0%);background-position-y:25%}
       #${C.overlayId} .state-idle .sprite{background-position-y:0}
       #${C.overlayId} .state-water .sprite{background-position-y:100%;clip-path:inset(6px 8px 6px 6px)}
       #${C.overlayId} .state-mud .sprite{background-position-y:50%}
