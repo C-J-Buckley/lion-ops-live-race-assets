@@ -22,7 +22,9 @@
       excited: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Commentator_Excited.png',
       thinking: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Commentator_thinking.png',
       bored: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Commentator_bored.png',
-      shocked: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Commentator_shocked.png'
+      shocked: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Commentator_shocked.png',
+      starry: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Commentator_Starry_Eyes.png',
+      laugh: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Commentator_laughing.png'
     },
     targetHours: 5,
     shiftStartHour: 22,
@@ -93,6 +95,12 @@
     ['Harold Mark Esguerra', '47'],
     ['Jason Thomas', '48'],
     ['Joel Polanco-Canales', '49']
+  ];
+
+  const ANNOUNCER_REMINDERS = [
+    { expression: 'starry', text: "Today's sponsor is the Inventory Team. Keep the pit lane clean: only one bin per station!" },
+    { expression: 'laugh', text: "Today's race is brought to you by SNACK! Fuel up, don't stock up. The snack table has a pit crew too!" },
+    { expression: 'starry', text: "Today's race is brought to you by Shift Coordinators, the task experts keeping this track moving!" }
   ];
 
   const normalizeNameKey = value => String(value ?? '').trim().replace(/\s+/g, ' ').toLowerCase();
@@ -872,6 +880,8 @@
       #${C.overlayId} *{box-sizing:border-box}
       #${C.overlayId} button{min-width:42px;height:9px;border:1px solid rgba(12,45,72,.34);border-radius:3px;padding:0 8px;color:#072033;background:rgba(255,255,255,.78);font:inherit;font-size:6px;line-height:7px;font-weight:1000;letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
       #${C.overlayId} button:hover{background:#fff}
+      #${C.overlayId} .controls button{display:grid;place-items:center;min-width:18px;width:18px;height:18px;padding:0;border:2px solid rgba(7,32,51,.78);border-radius:50%;color:#072033;background:rgba(255,255,255,.88);font-size:10px;line-height:1;letter-spacing:0;box-shadow:0 2px 0 rgba(2,6,23,.28)}
+      #${C.overlayId} .controls button:hover{background:#fff;transform:translateY(-1px)}
       #${C.overlayId} .shell{position:relative;width:100vw;height:100vh;min-width:980px;min-height:620px;overflow:hidden}
       #${C.overlayId} .title-card{position:absolute;z-index:8;left:16px;top:14px;display:block;color:#09243a;text-shadow:0 1px 0 rgba(255,255,255,.65)}
       #${C.overlayId} .title{font-size:clamp(24px,2.7vw,42px);line-height:.9;font-weight:1000;letter-spacing:.01em;text-transform:uppercase}
@@ -888,14 +898,14 @@
       #${C.overlayId} .segment.ice{left:76%;width:15%;background:#7dd3fc url("${C.iceTextureUrl}") 0 0/112px 112px repeat;image-rendering:pixelated;image-rendering:crisp-edges;overflow:hidden}
       #${C.overlayId} .segment.ice:before,#${C.overlayId} .segment.ice:after{content:"";position:absolute;inset:0;z-index:1;background:radial-gradient(circle,#fff 0 2px,transparent 3px),radial-gradient(circle,#e0f2fe 0 2px,transparent 3px),radial-gradient(circle,#bae6fd 0 1px,transparent 2px);background-size:54px 58px,86px 74px,42px 46px;animation:rolIceTwinkle 2.4s steps(3) infinite;pointer-events:none}
       #${C.overlayId} .segment.ice:after{background-position:25px 16px,44px 32px,12px 25px;opacity:.55;animation-duration:3.1s;animation-delay:.7s}
-      #${C.overlayId} .start-line{position:absolute;left:0;top:0;bottom:0;width:10px;background:repeating-linear-gradient(0deg,#fef3c7 0 8px,#92400e 8px 16px)}
+      #${C.overlayId} .start-line{position:absolute;left:0;top:0;bottom:0;width:20px;background:repeating-linear-gradient(0deg,#fef3c7 0 8px,#92400e 8px 16px)}
       #${C.overlayId} .hour-marker{position:absolute;top:0;bottom:0;width:0;border-left:0}
       #${C.overlayId} .marker-1{left:20%}#${C.overlayId} .marker-2{left:40%}#${C.overlayId} .marker-3{left:60%}#${C.overlayId} .marker-4{left:80%}
-      #${C.overlayId} .finish-line{position:absolute;right:0;top:0;bottom:0;width:12px;background:repeating-linear-gradient(0deg,#fff 0 8px,#111827 8px 16px)}
+      #${C.overlayId} .finish-line{position:absolute;right:0;top:0;bottom:0;width:22px;background:repeating-linear-gradient(0deg,#fff 0 8px,#111827 8px 16px)}
       #${C.overlayId}.is-finish-flash .finish-line{animation:rolFinishFlash 1.4s steps(4) 2}
       #${C.overlayId} .lane{position:absolute;left:0;right:0;height:12px;border-bottom:0}
       #${C.overlayId} .lane-label{display:none}
-      #${C.overlayId} .runner{position:absolute;top:-17px;left:calc(var(--progress) * 1%);width:44px;height:44px;transform:translateX(-50%);z-index:2}
+      #${C.overlayId} .runner{position:absolute;top:-17px;left:min(calc(var(--progress) * 1%),calc(100% - 11px));width:44px;height:44px;transform:translateX(-50%);z-index:2}
       #${C.overlayId} .locker-badge{position:absolute;left:-24px;top:19px;z-index:0;min-width:24px;height:15px;padding:0 4px;border:1px solid rgba(15,23,42,.52);border-radius:4px;color:#fff;background:rgba(15,23,42,.82);box-shadow:3px 3px 0 rgba(0,0,0,.32);font-size:10px;line-height:14px;font-weight:1000;text-align:center;text-shadow:1px 1px 0 #000}
       #${C.overlayId} .sprite{position:relative;z-index:1;width:44px;height:44px;background-image:url("${C.robotSpriteUrl}");background-repeat:no-repeat;background-size:400% 500%;background-position-x:var(--frame-x,0%);background-position-y:25%}
       #${C.overlayId} .state-idle .sprite{background-position-y:0}
@@ -936,16 +946,18 @@
       #${C.overlayId} .row.is-finished{animation:rolFinishRow 2.4s ease both}
       #${C.overlayId} .rank{color:#fef08a}#${C.overlayId} .hours{color:#d9f99d}#${C.overlayId} .time-value{color:#c4b5fd}
       #${C.overlayId} .changed{animation:rolChanged .7s ease}
-      #${C.overlayId} .announcer-panel{position:fixed;right:52px;top:625px;z-index:4;width:220px;height:220px;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 42% 28%,rgba(23,59,120,.75) 0,rgba(7,26,58,.75) 58%,rgba(3,11,29,.75) 100%);border:4px solid rgba(191,219,254,.72);box-shadow:0 22px 34px rgba(0,0,0,.46),0 6px 0 rgba(2,6,23,.34),0 0 22px rgba(59,130,246,.28),inset 0 0 0 4px rgba(255,255,255,.07);animation:rolAnnouncerPop .45s ease both}
+      #${C.overlayId} .announcer-panel{position:fixed;right:52px;top:620px;z-index:4;width:230px;height:230px;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 42% 28%,rgba(23,59,120,.75) 0,rgba(7,26,58,.75) 58%,rgba(3,11,29,.75) 100%);border:4px solid rgba(191,219,254,.72);box-shadow:0 22px 34px rgba(0,0,0,.46),0 6px 0 rgba(2,6,23,.34),0 0 22px rgba(59,130,246,.28),inset 0 0 0 4px rgba(255,255,255,.07);animation:rolAnnouncerPop .45s ease both}
       #${C.overlayId} .announcer-panel:before{content:"";position:absolute;inset:8px;border-radius:50%;border:1px solid rgba(147,197,253,.34);pointer-events:none}
       #${C.overlayId} .announcer-bubble{position:absolute;left:22px;top:18px;z-index:2;width:176px;min-height:58px;padding:8px 10px;border:2px solid #071a3a;border-radius:18px;background:#f8fbff;color:#071a3a;font-size:11px;line-height:1.12;font-weight:1000;text-align:center;text-transform:none;letter-spacing:.01em;box-shadow:0 5px 0 rgba(2,6,23,.28);animation:rolBubblePop .36s ease both}
       #${C.overlayId} .announcer-bubble:after{content:"";position:absolute;left:79px;bottom:-12px;width:18px;height:18px;background:#f8fbff;border-right:2px solid #071a3a;border-bottom:2px solid #071a3a;transform:rotate(45deg)}
-      #${C.overlayId} .announcer-title{position:absolute;left:0;right:0;bottom:8px;z-index:3;color:#bfdbfe;font-size:8px;line-height:1;font-weight:1000;letter-spacing:.12em;text-align:center;text-transform:uppercase;text-shadow:0 2px 0 #020617}
+      #${C.overlayId} .announcer-title{position:absolute;left:0;right:0;bottom:8px;z-index:3;color:#bfdbfe;font-size:8px;line-height:1.05;font-weight:1000;letter-spacing:.12em;text-align:center;text-transform:uppercase;text-shadow:0 2px 0 #020617}
       #${C.overlayId} .announcer-figure{position:absolute;left:50%;bottom:12px;z-index:1;width:120px;height:132px;transform:translateX(-50%);background-repeat:no-repeat;background-position:center bottom;background-size:contain;filter:drop-shadow(0 10px 8px rgba(0,0,0,.38))}
       #${C.overlayId} .announcer-figure[data-expression="excited"]{background-image:url("${C.commentatorUrls.excited}")}
       #${C.overlayId} .announcer-figure[data-expression="thinking"]{background-image:url("${C.commentatorUrls.thinking}")}
       #${C.overlayId} .announcer-figure[data-expression="bored"]{background-image:url("${C.commentatorUrls.bored}")}
       #${C.overlayId} .announcer-figure[data-expression="shocked"]{background-image:url("${C.commentatorUrls.shocked}")}
+      #${C.overlayId} .announcer-figure[data-expression="starry"]{background-image:url("${C.commentatorUrls.starry}")}
+      #${C.overlayId} .announcer-figure[data-expression="laugh"]{background-image:url("${C.commentatorUrls.laugh}")}
       #${C.overlayId} .msg{position:fixed;right:14px;bottom:14px;z-index:6;max-width:440px;border:1px solid rgba(254,202,202,.82);border-radius:8px;padding:12px 14px;color:#fecaca;background:rgba(127,29,29,.96);font-size:13px;font-weight:900;box-shadow:0 14px 34px rgba(0,0,0,.32)}
       #${C.overlayId} .host-card{position:fixed;left:50%;top:50%;z-index:7;width:min(520px,calc(100vw - 32px));transform:translate(-50%,-50%);border:1px solid rgba(125,211,252,.32);border-radius:8px;padding:18px;color:#e0f2fe;background:#0b172a;box-shadow:0 22px 54px rgba(0,0,0,.45)}
       #${C.overlayId} .host-card h2{margin:0 0 8px;font-size:22px}
@@ -999,8 +1011,8 @@
         <header class="title-card">
           <div class="title">${C.title}<span class="crew">${C.crew}</span></div>
           <div class="controls">
-            <button id="rol-refresh" type="button">Refresh</button>
-            <button id="rol-close" type="button">Close</button>
+            <button id="rol-refresh" type="button" title="Refresh" aria-label="Refresh">R</button>
+            <button id="rol-close" type="button" title="Close" aria-label="Close">X</button>
           </div>
         </header>
         <main class="course-wrap" aria-label="LION OPS LIVE RACE course">
@@ -1048,7 +1060,7 @@
         <aside class="announcer-panel" aria-label="TV announcer commentary">
           <div class="announcer-bubble" id="rol-announcer-text">Race desk standing by.</div>
           <div class="announcer-figure" id="rol-announcer-figure" data-expression="thinking" aria-hidden="true"></div>
-          <div class="announcer-title">Race Desk</div>
+          <div class="announcer-title">Race<br>Commentator</div>
         </aside>
       </div>
     `;
@@ -1059,10 +1071,10 @@
   function courseState(totalHours) {
     if (totalHours >= C.targetHours) return 'finish';
     const progress = clamp(totalHours / C.targetHours * 100, 0, 100);
-    if (progress >= 80 && progress < 91) return 'ice';
-    if (progress >= 60 && progress < 71) return 'electric';
-    if (progress >= 40 && progress < 51) return 'mud';
-    if (progress >= 20 && progress < 31) return 'water';
+    if (progress >= 76 && progress < 91) return 'ice';
+    if (progress >= 56 && progress < 71) return 'electric';
+    if (progress >= 36 && progress < 51) return 'mud';
+    if (progress >= 16 && progress < 31) return 'water';
     return totalHours > 0 ? 'run' : 'idle';
   }
 
@@ -1195,7 +1207,11 @@
     const ranked = rankedOperators(operators);
     const leader = ranked[0];
     const bucket = Math.floor(now.getTime() / (15 * 60 * 1000));
-    const type = bucket % 5;
+    const type = bucket % 9;
+
+    if (type === 2 || type === 5 || type === 8) {
+      return ANNOUNCER_REMINDERS[Math.floor(type / 3) % ANNOUNCER_REMINDERS.length];
+    }
 
     if (type === 0 && leader) {
       return { expression: 'excited', text: `Locker #${leader.locker} leads with ${leader.total.toFixed(2)} hrs!` };
@@ -1207,14 +1223,14 @@
       return { expression: gap <= 0.25 ? 'shocked' : 'thinking', text: `Locker #${chaser.locker} is chasing #${leader.locker}. Gap: ${gap.toFixed(2)} hrs.` };
     }
 
-    if (type === 2) {
+    if (type === 3) {
       const projected = [...operators]
         .filter(operator => operator.projected != null)
         .sort((a, b) => b.projected - a.projected)[0] || leader;
       return { expression: 'excited', text: `Locker #${projected.locker} projected hours look amazing!` };
     }
 
-    if (type === 3) {
+    if (type === 4 || type === 7) {
       const spotlight = operators[bucket % operators.length];
       return { expression: 'thinking', text: `Locker #${spotlight.locker} is working through ${courseLabelFor(spotlight.total)}.` };
     }
