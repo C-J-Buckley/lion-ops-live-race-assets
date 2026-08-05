@@ -981,6 +981,9 @@
   }
 
   function createOverlay() {
+    document.getElementById(C.overlayId)?.__cleanup?.();
+    document.getElementById(C.styleId)?.remove();
+    document.getElementById(C.overlayId)?.remove();
     const overlay = document.createElement('div');
     overlay.id = C.overlayId;
     overlay.__cleanup = cleanup;
