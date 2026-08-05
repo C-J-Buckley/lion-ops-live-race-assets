@@ -944,7 +944,7 @@
       #${C.overlayId} .hold-copy b{display:block;font-size:16px;text-transform:uppercase}#${C.overlayId} .hold-copy strong{display:block;margin-top:6px;font-size:32px;letter-spacing:.04em}
       #${C.overlayId} .final-countdown{position:absolute;inset:0;z-index:4;display:none;place-items:center;color:#facc15;font-size:92px;line-height:1;font-weight:1000;text-shadow:4px 4px 0 #111827,-2px -2px 0 #111827,0 0 18px rgba(250,204,21,.7);pointer-events:none}
       #${C.overlayId} .final-countdown.is-active{display:grid;animation:rolFinalPop .38s steps(3) both}
-      #${C.overlayId} .board{position:fixed;z-index:5;right:12px;top:50px;width:var(--rank-board-w);max-height:620px;overflow:hidden;border:2px solid rgba(15,23,42,.48);border-radius:8px;background:rgba(9,31,48,.9);color:#f8fafc;box-shadow:0 16px 30px rgba(0,0,0,.28)}
+      #${C.overlayId} .board{position:fixed;z-index:6;right:12px;top:40px;width:var(--rank-board-w);max-height:555px;overflow:hidden;border:2px solid rgba(15,23,42,.48);border-radius:8px;background:rgba(9,31,48,.9);color:#f8fafc;box-shadow:0 16px 30px rgba(0,0,0,.28)}
       #${C.overlayId} .board-title{padding:7px 9px 5px;font-size:13px;line-height:1;font-weight:1000;text-transform:uppercase;letter-spacing:.08em;background:rgba(2,6,23,.45)}
       #${C.overlayId} .board-summary{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid rgba(255,255,255,.16);border-bottom:1px solid rgba(255,255,255,.16)}
       #${C.overlayId} .board-summary div{padding:5px 6px;text-align:center;border-right:1px solid rgba(255,255,255,.14)}
@@ -952,13 +952,13 @@
       #${C.overlayId} .board-summary b{display:block;color:#a5f3fc;font-size:8px;letter-spacing:.08em;text-transform:uppercase}#${C.overlayId} .board-summary strong{display:block;font-size:15px;line-height:1.1}
       #${C.overlayId} .board-head,#${C.overlayId} .row{display:grid;grid-template-columns:42px 32px 72px 34px 52px 52px;align-items:center}
       #${C.overlayId} .board-head{padding:4px 7px;color:#bae6fd;background:rgba(2,6,23,.55);font-size:8px;font-weight:1000;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.14)}
-      #${C.overlayId} .rows{max-height:530px;overflow:hidden}
+      #${C.overlayId} .rows{max-height:465px;overflow:hidden}
       #${C.overlayId} .row{min-height:14px;padding:0 7px;border-bottom:1px solid rgba(255,255,255,.07);font-size:10px;line-height:14px;font-weight:900}
       #${C.overlayId} .row:nth-child(even){background:rgba(255,255,255,.045)}
       #${C.overlayId} .row.is-finished{animation:rolFinishRow 2.4s ease both}
       #${C.overlayId} .rank{color:#fef08a}#${C.overlayId} .hours{color:#d9f99d}#${C.overlayId} .time-value{color:#c4b5fd}
       #${C.overlayId} .changed{animation:rolChanged .7s ease}
-      #${C.overlayId} .announcer-panel{position:fixed;right:52px;top:620px;z-index:4;width:230px;height:230px;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 42% 28%,rgba(23,59,120,.75) 0,rgba(7,26,58,.75) 58%,rgba(3,11,29,.75) 100%);border:4px solid rgba(191,219,254,.72);box-shadow:0 22px 34px rgba(0,0,0,.46),0 6px 0 rgba(2,6,23,.34),0 0 22px rgba(59,130,246,.28),inset 0 0 0 4px rgba(255,255,255,.07);animation:rolAnnouncerPop .45s ease both}
+      #${C.overlayId} .announcer-panel{position:fixed;right:52px;top:min(605px,calc(100vh - 238px));z-index:7;width:230px;height:230px;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 42% 28%,rgba(23,59,120,.75) 0,rgba(7,26,58,.75) 58%,rgba(3,11,29,.75) 100%);border:4px solid rgba(191,219,254,.72);box-shadow:0 22px 34px rgba(0,0,0,.46),0 6px 0 rgba(2,6,23,.34),0 0 22px rgba(59,130,246,.28),inset 0 0 0 4px rgba(255,255,255,.07);animation:rolAnnouncerPop .45s ease both}
       #${C.overlayId} .announcer-panel:before{content:"";position:absolute;inset:8px;border-radius:50%;border:1px solid rgba(147,197,253,.34);pointer-events:none}
       #${C.overlayId} .announcer-bubble{position:absolute;left:22px;top:18px;z-index:2;width:176px;min-height:58px;padding:8px 10px;border:2px solid #071a3a;border-radius:18px;background:#f8fbff;color:#071a3a;font-size:11px;line-height:1.12;font-weight:1000;text-align:center;text-transform:none;letter-spacing:.01em;box-shadow:0 5px 0 rgba(2,6,23,.28);animation:rolBubblePop .36s ease both}
       #${C.overlayId} .announcer-bubble:after{content:"";position:absolute;left:79px;bottom:-12px;width:18px;height:18px;background:#f8fbff;border-right:2px solid #071a3a;border-bottom:2px solid #071a3a;transform:rotate(45deg)}
