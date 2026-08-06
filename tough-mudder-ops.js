@@ -42,7 +42,7 @@
     minCurrentHours: 0.05,
     inactiveMs: 45 * 60 * 1000,
     maxStations: 27,
-    maxLockerNumber: 51,
+    maxLockerNumber: 54,
     breaks: [
       { label: '1ST BREAK', message: 'LION OPS LIVE RACE will return after Break', hour: 0, minute: 30, durationMin: 15 },
       { label: 'LUNCH', message: 'LION OPS LIVE RACE will return after Lunch', hour: 2, minute: 30, durationMin: 30 },
@@ -101,7 +101,10 @@
     ['Jason Thomas', '48'],
     ['Joel Polanco-Canales', '49'],
     ['Marion Morehead', '50'],
-    ['Dimitric Robertson', '51']
+    ['Dimitric Robertson', '51'],
+    ['Birhanu Hagos', '52'],
+    ['Andre Ennon', '53'],
+    ['Mukul Ved', '54']
   ];
 
   const ANNOUNCER_REMINDERS = [
