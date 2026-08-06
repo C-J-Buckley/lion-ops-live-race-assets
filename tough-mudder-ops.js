@@ -11,8 +11,9 @@
     crew: 'LION Nightshift Crew',
     assetBaseUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/',
     robotSpriteUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/robot-sprite-transparent.png',
+    fireTextureUrl: 'https://raw.githubusercontent.com/C-J-Buckley/lion-ops-live-race-assets/main/Assets/Fire-Course.gif',
     waterTextureUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Water.gif',
-    mudTextureUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Mud.png',
+    mudTextureUrl: 'https://raw.githubusercontent.com/C-J-Buckley/lion-ops-live-race-assets/main/Assets/Mud-Course2.gif',
     iceTextureUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Ice.png',
     grassBackgroundUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/GrassBackground.png',
     electricGroundUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/ElectricGround.png',
@@ -900,14 +901,16 @@
       #${C.overlayId} .crew{display:block;margin-top:4px;font-size:10px;font-weight:1000;letter-spacing:.16em}
       #${C.overlayId} .controls{position:fixed;right:6px;top:5px;z-index:9;display:flex;width:var(--rank-board-w);justify-content:flex-end;gap:2px}
       #${C.overlayId} .course-wrap{position:absolute;left:0;right:calc(var(--rank-board-w) + 56px);top:82px;bottom:10px;overflow:hidden;border:0;border-radius:0;background:#83b80d url("${C.grassBackgroundUrl}") 0 0/220px 220px repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
-      #${C.overlayId} .course-track{position:absolute;left:0;right:0;top:0;bottom:12px;overflow:hidden;border-radius:0;background:#83b80d;background-image:linear-gradient(rgba(31,91,24,.18),rgba(31,91,24,.18)),url("${C.grassBackgroundUrl}");background-position:0 0,0 0;background-size:100% 100%,220px 220px;background-repeat:no-repeat,repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
+      #${C.overlayId} .course-track{--course-gap:10px;--course-w:calc((100% - 20px - 22px - (var(--course-gap) * 4)) / 5);position:absolute;left:0;right:0;top:0;bottom:12px;overflow:hidden;border-radius:0;background:#83b80d;background-image:linear-gradient(rgba(31,91,24,.18),rgba(31,91,24,.18)),url("${C.grassBackgroundUrl}");background-position:0 0,0 0;background-size:100% 100%,220px 220px;background-repeat:no-repeat,repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
       #${C.overlayId} .segment{position:absolute;top:0;bottom:0;border-left:0;border-right:0}
-      #${C.overlayId} .segment.water{left:16%;width:15%;background:#22c5eb url("${C.waterTextureUrl}") 0 0/100% auto repeat-y;image-rendering:pixelated;image-rendering:crisp-edges}
-      #${C.overlayId} .segment.mud{left:36%;width:15%;background:#4e2d18 url("${C.mudTextureUrl}") 0 0/112px 112px repeat;image-rendering:pixelated;image-rendering:crisp-edges;overflow:hidden}
-      #${C.overlayId} .segment.electric{left:56%;width:15%;background:#8b5a34 url("${C.electricGroundUrl}") 50% 50%/160px 160px repeat;image-rendering:pixelated;image-rendering:crisp-edges;overflow:hidden}
+      #${C.overlayId} .segment.fire{left:20px;width:var(--course-w);background:#f97316 url("${C.fireTextureUrl}") 50% 0/96px 96px repeat;image-rendering:pixelated;image-rendering:crisp-edges;overflow:hidden}
+      #${C.overlayId} .segment.fire:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(127,29,29,.18),rgba(250,204,21,.12),rgba(127,29,29,.18));mix-blend-mode:screen;pointer-events:none}
+      #${C.overlayId} .segment.water{left:calc(20px + var(--course-w) + var(--course-gap));width:var(--course-w);background:#22c5eb url("${C.waterTextureUrl}") 0 0/100% auto repeat-y;image-rendering:pixelated;image-rendering:crisp-edges}
+      #${C.overlayId} .segment.mud{left:calc(20px + var(--course-w) + var(--course-gap) + var(--course-w) + var(--course-gap));width:var(--course-w);background:#4e2d18 url("${C.mudTextureUrl}") 0 0/112px 112px repeat;image-rendering:pixelated;image-rendering:crisp-edges;overflow:hidden}
+      #${C.overlayId} .segment.electric{left:calc(20px + var(--course-w) + var(--course-gap) + var(--course-w) + var(--course-gap) + var(--course-w) + var(--course-gap));width:var(--course-w);background:#8b5a34 url("${C.electricGroundUrl}") 50% 50%/160px 160px repeat;image-rendering:pixelated;image-rendering:crisp-edges;overflow:hidden}
       #${C.overlayId} .segment.electric:before{content:"";position:absolute;inset:0;z-index:1;background:url("${C.thunderTextureUrl}") 16% 0/68px 188px repeat-y,url("${C.thunderTextureUrl}") 62% 42px/64px 178px repeat-y;opacity:.95;mix-blend-mode:screen;pointer-events:none}
       #${C.overlayId} .segment.electric:after{content:"";position:absolute;inset:4px 0;z-index:2;background:url("${C.barbedWireUrl}") 50% 0/190px 96px repeat;opacity:.78;pointer-events:none}
-      #${C.overlayId} .segment.ice{left:76%;width:15%;background:#7dd3fc url("${C.iceTextureUrl}") 0 0/112px 112px repeat;image-rendering:pixelated;image-rendering:crisp-edges;overflow:hidden}
+      #${C.overlayId} .segment.ice{left:calc(20px + var(--course-w) + var(--course-gap) + var(--course-w) + var(--course-gap) + var(--course-w) + var(--course-gap) + var(--course-w) + var(--course-gap));width:var(--course-w);background:#7dd3fc url("${C.iceTextureUrl}") 0 0/112px 112px repeat;image-rendering:pixelated;image-rendering:crisp-edges;overflow:hidden}
       #${C.overlayId} .segment.ice:before,#${C.overlayId} .segment.ice:after{content:"";position:absolute;inset:0;z-index:1;background:radial-gradient(circle,#fff 0 2px,transparent 3px),radial-gradient(circle,#e0f2fe 0 2px,transparent 3px),radial-gradient(circle,#bae6fd 0 1px,transparent 2px);background-size:54px 58px,86px 74px,42px 46px;animation:rolIceTwinkle 2.4s steps(3) infinite;pointer-events:none}
       #${C.overlayId} .segment.ice:after{background-position:25px 16px,44px 32px,12px 25px;opacity:.55;animation-duration:3.1s;animation-delay:.7s}
       #${C.overlayId} .start-line{position:absolute;left:0;top:0;bottom:0;width:20px;background:repeating-linear-gradient(0deg,#fef3c7 0 8px,#92400e 8px 16px)}
@@ -921,6 +924,7 @@
       #${C.overlayId} .locker-badge{position:absolute;left:calc(var(--runner-size) * -.55);top:calc(var(--runner-size) * .43);z-index:0;min-width:calc(var(--runner-size) * .55);height:calc(var(--runner-size) * .34);padding:0 4px;border:1px solid rgba(15,23,42,.52);border-radius:4px;color:#fff;background:rgba(15,23,42,.82);box-shadow:3px 3px 0 rgba(0,0,0,.32);font-size:clamp(7px,calc(var(--runner-size) * .23),10px);line-height:calc(var(--runner-size) * .31);font-weight:1000;text-align:center;text-shadow:1px 1px 0 #000}
       #${C.overlayId} .sprite{position:relative;z-index:1;width:var(--runner-size);height:var(--runner-size);background-image:url("${C.robotSpriteUrl}");background-repeat:no-repeat;background-size:400% 500%;background-position-x:var(--frame-x,0%);background-position-y:25%}
       #${C.overlayId} .state-idle .sprite{background-position-y:0}
+      #${C.overlayId} .state-fire .sprite{background-position-y:25%;filter:drop-shadow(0 0 5px rgba(251,146,60,.85))}
       #${C.overlayId} .state-water .sprite{background-position-y:100%;clip-path:inset(6px 8px 6px 6px)}
       #${C.overlayId} .state-mud .sprite{background-position-y:50%}
       #${C.overlayId} .state-mud:before,#${C.overlayId} .state-mud:after{content:"";position:absolute;z-index:3;width:4px;height:4px;background:#4e2d18;image-rendering:pixelated;animation:rolMudParticles .55s steps(3) infinite;pointer-events:none}
@@ -958,7 +962,7 @@
       #${C.overlayId} .row.is-finished{animation:rolFinishRow 2.4s ease both}
       #${C.overlayId} .rank{color:#fef08a}#${C.overlayId} .hours{color:#d9f99d}#${C.overlayId} .time-value{color:#c4b5fd}
       #${C.overlayId} .changed{animation:rolChanged .7s ease}
-      #${C.overlayId} .announcer-panel{--announcer-size:min(var(--rank-board-w),calc(100vh - 610px));position:fixed;right:12px;bottom:10px;z-index:7;width:var(--announcer-size);height:var(--announcer-size);min-width:190px;min-height:190px;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 42% 28%,rgba(23,59,120,.75) 0,rgba(7,26,58,.75) 58%,rgba(3,11,29,.75) 100%);border:4px solid rgba(191,219,254,.72);box-shadow:0 16px 26px rgba(0,0,0,.42),0 5px 0 rgba(2,6,23,.34),0 0 18px rgba(59,130,246,.24),inset 0 0 0 4px rgba(255,255,255,.07);animation:rolAnnouncerPop .45s ease both}
+      #${C.overlayId} .announcer-panel{--announcer-size:clamp(190px,calc(100vh - 610px),var(--rank-board-w));position:fixed;right:12px;bottom:10px;z-index:7;width:var(--announcer-size);height:var(--announcer-size);border-radius:50%;overflow:hidden;background:radial-gradient(circle at 42% 28%,rgba(23,59,120,.75) 0,rgba(7,26,58,.75) 58%,rgba(3,11,29,.75) 100%);border:4px solid rgba(191,219,254,.72);box-shadow:0 16px 26px rgba(0,0,0,.42),0 5px 0 rgba(2,6,23,.34),0 0 18px rgba(59,130,246,.24),inset 0 0 0 4px rgba(255,255,255,.07);animation:rolAnnouncerPop .45s ease both}
       #${C.overlayId} .announcer-panel:before{content:"";position:absolute;inset:7px;border-radius:50%;border:1px solid rgba(147,197,253,.34);pointer-events:none}
       #${C.overlayId} .announcer-bubble{position:absolute;left:11%;top:calc(10% + 5px);z-index:3;width:78%;min-height:24%;padding:8px 10px;border:2px solid #071a3a;border-radius:17px;background:#f8fbff;color:#071a3a;font-size:clamp(9px,calc(var(--announcer-size) * .045),13px);line-height:1.06;font-weight:1000;text-align:center;text-transform:none;letter-spacing:.01em;box-shadow:0 4px 0 rgba(2,6,23,.28);animation:rolBubblePop .36s ease both}
       #${C.overlayId} .announcer-bubble:after{content:"";position:absolute;left:45%;bottom:-10px;width:15px;height:15px;background:#f8fbff;border-right:2px solid #071a3a;border-bottom:2px solid #071a3a;transform:rotate(45deg)}
@@ -1036,6 +1040,7 @@
             <div class="hour-marker marker-2"></div>
             <div class="hour-marker marker-3"></div>
             <div class="hour-marker marker-4"></div>
+            <div class="segment fire"></div>
             <div class="segment water"></div>
             <div class="segment mud"></div>
             <div class="segment electric"></div>
@@ -1086,10 +1091,11 @@
   function courseState(totalHours) {
     if (totalHours >= C.targetHours) return 'finish';
     const progress = clamp(totalHours / C.targetHours * 100, 0, 100);
-    if (progress >= 76 && progress < 91) return 'ice';
-    if (progress >= 56 && progress < 71) return 'electric';
-    if (progress >= 36 && progress < 51) return 'mud';
-    if (progress >= 16 && progress < 31) return 'water';
+    if (progress >= 80) return 'ice';
+    if (progress >= 60) return 'electric';
+    if (progress >= 40) return 'mud';
+    if (progress >= 20) return 'water';
+    if (progress > 0) return 'fire';
     return totalHours > 0 ? 'run' : 'idle';
   }
 
@@ -1197,6 +1203,7 @@
 
   function courseLabelFor(totalHours) {
     const stateName = courseState(totalHours);
+    if (stateName === 'fire') return 'Fire';
     if (stateName === 'water') return 'Water';
     if (stateName === 'mud') return 'Mud';
     if (stateName === 'electric') return 'Electricity';
@@ -1314,6 +1321,7 @@
       <div class="hour-marker marker-2"></div>
       <div class="hour-marker marker-3"></div>
       <div class="hour-marker marker-4"></div>
+      <div class="segment fire"></div>
       <div class="segment water"></div>
       <div class="segment mud"></div>
       <div class="segment electric"></div>
