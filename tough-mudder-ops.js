@@ -11,7 +11,7 @@
     crew: 'LION Nightshift Crew',
     assetBaseUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/',
     robotSpriteUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/robot-sprite-transparent.png',
-    fireTextureUrl: 'https://raw.githubusercontent.com/C-J-Buckley/lion-ops-live-race-assets/main/Assets/Fire-Course.gif',
+    fireTextureUrl: 'https://raw.githubusercontent.com/C-J-Buckley/lion-ops-live-race-assets/main/Assets/Fire-Course%203.gif',
     waterTextureUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Water.gif',
     mudTextureUrl: 'https://raw.githubusercontent.com/C-J-Buckley/lion-ops-live-race-assets/main/Assets/Mud-Course2.gif',
     iceTextureUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Ice.png',
