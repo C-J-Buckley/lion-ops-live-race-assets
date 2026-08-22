@@ -893,7 +893,7 @@
       @keyframes rolConfetti{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--confetti-x),var(--confetti-y)) scale(.3)}}
       @keyframes rolCrowdCheer{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
       @keyframes rolBalloonBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-      #${C.overlayId}{--rank-board-w:300px;position:fixed;inset:0;z-index:2147483647;overflow:hidden;color:#12304a;background:#83b80d url("${C.grassBackgroundUrl}") 0 0/220px 220px repeat;image-rendering:pixelated;image-rendering:crisp-edges;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;animation:rolFade .16s ease}
+      #${C.overlayId}{--rank-board-w:380px;position:fixed;inset:0;z-index:2147483647;overflow:hidden;color:#12304a;background:#83b80d url("${C.grassBackgroundUrl}") 0 0/220px 220px repeat;image-rendering:pixelated;image-rendering:crisp-edges;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;animation:rolFade .16s ease}
       #${C.overlayId} *{box-sizing:border-box}
       #${C.overlayId} button{min-width:42px;height:9px;border:1px solid rgba(12,45,72,.34);border-radius:3px;padding:0 8px;color:#072033;background:rgba(255,255,255,.78);font:inherit;font-size:6px;line-height:7px;font-weight:1000;letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
       #${C.overlayId} button:hover{background:#fff}
@@ -927,7 +927,7 @@
       #${C.overlayId}.is-finish-flash .finish-line{animation:rolFinishFlash 1.4s steps(4) 2}
       #${C.overlayId} .lane{position:absolute;left:0;right:0;height:12px;border-bottom:0}
       #${C.overlayId} .lane-label{display:none}
-      #${C.overlayId} .runner{--runner-size:clamp(26px,3.4vh,44px);position:absolute;top:calc(var(--runner-size) * -.38);left:min(calc(var(--progress) * 1%),calc(100% - 11px));width:var(--runner-size);height:var(--runner-size);transform:translateX(-50%);z-index:2}
+      #${C.overlayId} .runner{--runner-size:clamp(31px,3.9vh,49px);position:absolute;top:calc(var(--runner-size) * -.38);left:min(calc(var(--progress) * 1%),calc(100% - 11px));width:var(--runner-size);height:var(--runner-size);transform:translateX(-50%);z-index:2}
       #${C.overlayId} .locker-badge{position:absolute;left:calc(var(--runner-size) * -.55);top:calc(var(--runner-size) * .43);z-index:0;min-width:calc(var(--runner-size) * .55);height:calc(var(--runner-size) * .34);padding:0 4px;border:1px solid rgba(15,23,42,.52);border-radius:4px;color:#fff;background:rgba(15,23,42,.82);box-shadow:3px 3px 0 rgba(0,0,0,.32);font-size:clamp(7px,calc(var(--runner-size) * .23),10px);line-height:calc(var(--runner-size) * .31);font-weight:1000;text-align:center;text-shadow:1px 1px 0 #000}
       #${C.overlayId} .sprite{position:relative;z-index:1;width:var(--runner-size);height:var(--runner-size);background-image:url("${C.robotSpriteUrl}");background-repeat:no-repeat;background-size:400% 500%;background-position-x:var(--frame-x,0%);background-position-y:25%}
       #${C.overlayId} .state-idle .sprite{background-position-y:0}
@@ -951,20 +951,20 @@
       #${C.overlayId} .final-countdown{position:absolute;inset:0;z-index:4;display:none;place-items:center;color:#facc15;font-size:92px;line-height:1;font-weight:1000;text-shadow:4px 4px 0 #111827,-2px -2px 0 #111827,0 0 18px rgba(250,204,21,.7);pointer-events:none}
       #${C.overlayId} .final-countdown.is-active{display:grid;animation:rolFinalPop .38s steps(3) both}
       #${C.overlayId} .board{position:fixed;z-index:6;right:12px;top:40px;width:var(--rank-board-w);max-height:555px;overflow:hidden;border:2px solid rgba(15,23,42,.48);border-radius:8px;background:rgba(9,31,48,.9);color:#f8fafc;box-shadow:0 16px 30px rgba(0,0,0,.28)}
-      #${C.overlayId} .board-title{padding:7px 9px 5px;font-size:13px;line-height:1;font-weight:1000;text-transform:uppercase;letter-spacing:.08em;background:rgba(2,6,23,.45)}
+      #${C.overlayId} .board-title{padding:8px 10px 6px;font-size:16px;line-height:1;font-weight:1000;text-transform:uppercase;letter-spacing:.08em;background:rgba(2,6,23,.45)}
       #${C.overlayId} .board-summary{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid rgba(255,255,255,.16);border-bottom:1px solid rgba(255,255,255,.16)}
-      #${C.overlayId} .board-summary div{padding:5px 6px;text-align:center;border-right:1px solid rgba(255,255,255,.14)}
+      #${C.overlayId} .board-summary div{padding:6px 7px;text-align:center;border-right:1px solid rgba(255,255,255,.14)}
       #${C.overlayId} .board-summary div:last-child{border-right:0}
-      #${C.overlayId} .board-summary b{display:block;color:#a5f3fc;font-size:8px;letter-spacing:.08em;text-transform:uppercase}#${C.overlayId} .board-summary strong{display:block;font-size:15px;line-height:1.1}
-      #${C.overlayId} .board-head,#${C.overlayId} .row{display:grid;grid-template-columns:42px 32px 72px 34px 52px 52px;align-items:center}
-      #${C.overlayId} .board-head{padding:4px 7px;color:#bae6fd;background:rgba(2,6,23,.55);font-size:8px;font-weight:1000;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.14)}
+      #${C.overlayId} .board-summary b{display:block;color:#a5f3fc;font-size:9px;letter-spacing:.08em;text-transform:uppercase}#${C.overlayId} .board-summary strong{display:block;font-size:18px;line-height:1.1}
+      #${C.overlayId} .board-head,#${C.overlayId} .row{display:grid;grid-template-columns:48px 38px 92px 42px 64px 64px;align-items:center}
+      #${C.overlayId} .board-head{padding:5px 8px;color:#bae6fd;background:rgba(2,6,23,.55);font-size:9px;font-weight:1000;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.14)}
       #${C.overlayId} .rows{max-height:465px;overflow:hidden}
-      #${C.overlayId} .row{min-height:14px;padding:0 7px;border-bottom:1px solid rgba(255,255,255,.07);font-size:10px;line-height:14px;font-weight:900}
+      #${C.overlayId} .row{min-height:16px;padding:0 8px;border-bottom:1px solid rgba(255,255,255,.07);font-size:11px;line-height:16px;font-weight:900}
       #${C.overlayId} .row:nth-child(even){background:rgba(255,255,255,.045)}
       #${C.overlayId} .row.is-finished{animation:rolFinishRow 2.4s ease both}
       #${C.overlayId} .rank{color:#fef08a}#${C.overlayId} .hours{color:#d9f99d}#${C.overlayId} .time-value{color:#c4b5fd}
       #${C.overlayId} .changed{animation:rolChanged .7s ease}
-      #${C.overlayId} .announcer-panel{--announcer-size:clamp(190px,calc(100vh - 610px),var(--rank-board-w));position:fixed;right:12px;bottom:10px;z-index:7;width:var(--announcer-size);height:var(--announcer-size);border-radius:50%;overflow:hidden;background:radial-gradient(circle at 42% 28%,rgba(23,59,120,.75) 0,rgba(7,26,58,.75) 58%,rgba(3,11,29,.75) 100%);border:4px solid rgba(191,219,254,.72);box-shadow:0 16px 26px rgba(0,0,0,.42),0 5px 0 rgba(2,6,23,.34),0 0 18px rgba(59,130,246,.24),inset 0 0 0 4px rgba(255,255,255,.07);animation:rolAnnouncerPop .45s ease both}
+      #${C.overlayId} .announcer-panel{--announcer-size:clamp(190px,calc(100vh - 610px),300px);position:fixed;right:12px;bottom:10px;z-index:7;width:var(--announcer-size);height:var(--announcer-size);border-radius:50%;overflow:hidden;background:radial-gradient(circle at 42% 28%,rgba(23,59,120,.75) 0,rgba(7,26,58,.75) 58%,rgba(3,11,29,.75) 100%);border:4px solid rgba(191,219,254,.72);box-shadow:0 16px 26px rgba(0,0,0,.42),0 5px 0 rgba(2,6,23,.34),0 0 18px rgba(59,130,246,.24),inset 0 0 0 4px rgba(255,255,255,.07);animation:rolAnnouncerPop .45s ease both}
       #${C.overlayId} .announcer-panel:before{content:"";position:absolute;inset:7px;border-radius:50%;border:1px solid rgba(147,197,253,.34);pointer-events:none}
       #${C.overlayId} .announcer-bubble{position:absolute;left:11%;top:calc(10% + 5px);z-index:3;width:78%;min-height:24%;padding:8px 10px;border:2px solid #071a3a;border-radius:17px;background:#f8fbff;color:#071a3a;font-size:clamp(9px,calc(var(--announcer-size) * .045),13px);line-height:1.06;font-weight:1000;text-align:center;text-transform:none;letter-spacing:.01em;box-shadow:0 4px 0 rgba(2,6,23,.28);animation:rolBubblePop .36s ease both}
       #${C.overlayId} .announcer-bubble.is-hidden{display:none}
