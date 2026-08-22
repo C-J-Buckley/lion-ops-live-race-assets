@@ -23,7 +23,6 @@
     electricGroundUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/ElectricGround.png',
     thunderTextureUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Thunder_Transparent.gif',
     barbedWireUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/BarbedWire.png',
-    crowdCheerUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Crowd-Cheer.gif',
     commentatorUrls: {
       excited: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Commentator_Excited.png',
       thinking: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Commentator_thinking.png',
@@ -924,7 +923,6 @@
       #${C.overlayId} .controls{position:fixed;right:6px;top:5px;z-index:9;display:flex;width:var(--rank-board-w);justify-content:flex-end;gap:2px}
       #${C.overlayId} .course-wrap{position:absolute;left:0;right:calc(var(--rank-board-w) + 12px);top:82px;bottom:10px;overflow:hidden;border:0;border-radius:0;background:#83b80d url("${C.grassBackgroundUrl}") 0 0/220px 220px repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
       #${C.overlayId} .course-track{--course-gap:${C.courseGapPx}px;--start-line-w:${C.startLineWidthPx}px;--finish-line-w:${C.finishLineWidthPx}px;--runner-size:clamp(31px,3.9vh,49px);--course-start:calc(var(--start-line-w) + var(--course-gap));--course-w:calc((100% - var(--start-line-w) - var(--finish-line-w) - (var(--course-gap) * 4)) / 3);position:absolute;left:0;right:0;top:0;bottom:12px;overflow:hidden;border-radius:0;background:#83b80d;background-image:linear-gradient(rgba(31,91,24,.18),rgba(31,91,24,.18)),url("${C.grassBackgroundUrl}");background-position:0 0,0 0;background-size:100% 100%,220px 220px;background-repeat:no-repeat,repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
-      #${C.overlayId} .crowd-cheer{--course-area-w:calc(100vw - var(--rank-board-w) - 12px);--course-w:calc((var(--course-area-w) - ${C.startLineWidthPx + C.finishLineWidthPx + C.courseGapPx * 4}px) / 3);position:fixed;z-index:4;left:calc(${C.startLineWidthPx + C.courseGapPx * 2}px + var(--course-w));top:8px;width:calc((var(--course-w) * 2) + ${C.courseGapPx}px);height:50px;background:url("${C.crowdCheerUrl}") 0 0/120px 50px repeat-x;image-rendering:pixelated;image-rendering:crisp-edges;pointer-events:none}
       #${C.overlayId} .segment{position:absolute;z-index:1;top:0;bottom:0;border-left:0;border-right:0}
       #${C.overlayId} .segment.water{left:var(--course-start);width:var(--course-w);background:#22c5eb url("${C.waterTextureUrl}") 0 0/100% auto repeat-y;image-rendering:pixelated;image-rendering:crisp-edges}
       #${C.overlayId} .segment.mud{left:calc(var(--course-start) + var(--course-w) + var(--course-gap));width:var(--course-w);background:#4e2d18 url("${C.mudTextureUrl}") 0 0/112px 112px repeat;image-rendering:pixelated;image-rendering:crisp-edges;overflow:hidden}
@@ -1037,10 +1035,6 @@
     )).join('');
   }
 
-  function crowdHtml() {
-    return '<div class="crowd-cheer" aria-hidden="true"></div>';
-  }
-
   function shell(overlay) {
     overlay.innerHTML = `
       <div class="shell">
@@ -1051,7 +1045,6 @@
             <button id="rol-close" type="button" title="Close" aria-label="Close">X</button>
           </div>
         </header>
-        ${crowdHtml()}
         <main class="course-wrap" aria-label="LION OPS LIVE RACE course">
           <div class="course-track" id="rol-course">
             <div class="start-line"></div>
