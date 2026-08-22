@@ -9,6 +9,9 @@
     refreshMs: 60000,
     announcerMs: 15 * 60 * 1000,
     announcerBubbleMs: 3 * 60 * 1000,
+    courseGapPx: 10,
+    startLineWidthPx: 35,
+    finishLineWidthPx: 37,
     title: 'LION OPS LIVE RACE',
     crew: 'LION Nightshift Crew',
     assetBaseUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/',
@@ -905,7 +908,7 @@
       #${C.overlayId} .crew{display:block;margin-top:4px;font-size:10px;font-weight:1000;letter-spacing:.16em}
       #${C.overlayId} .controls{position:fixed;right:6px;top:5px;z-index:9;display:flex;width:var(--rank-board-w);justify-content:flex-end;gap:2px}
       #${C.overlayId} .course-wrap{position:absolute;left:0;right:calc(var(--rank-board-w) + 12px);top:82px;bottom:10px;overflow:hidden;border:0;border-radius:0;background:#83b80d url("${C.grassBackgroundUrl}") 0 0/220px 220px repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
-      #${C.overlayId} .course-track{--course-gap:10px;--start-line-w:35px;--finish-line-w:37px;--course-start:calc(var(--start-line-w) + var(--course-gap));--course-w:calc((100% - var(--start-line-w) - var(--finish-line-w) - (var(--course-gap) * 4)) / 3);position:absolute;left:0;right:0;top:0;bottom:12px;overflow:hidden;border-radius:0;background:#83b80d;background-image:linear-gradient(rgba(31,91,24,.18),rgba(31,91,24,.18)),url("${C.grassBackgroundUrl}");background-position:0 0,0 0;background-size:100% 100%,220px 220px;background-repeat:no-repeat,repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
+      #${C.overlayId} .course-track{--course-gap:${C.courseGapPx}px;--start-line-w:${C.startLineWidthPx}px;--finish-line-w:${C.finishLineWidthPx}px;--course-start:calc(var(--start-line-w) + var(--course-gap));--course-w:calc((100% - var(--start-line-w) - var(--finish-line-w) - (var(--course-gap) * 4)) / 3);position:absolute;left:0;right:0;top:0;bottom:12px;overflow:hidden;border-radius:0;background:#83b80d;background-image:linear-gradient(rgba(31,91,24,.18),rgba(31,91,24,.18)),url("${C.grassBackgroundUrl}");background-position:0 0,0 0;background-size:100% 100%,220px 220px;background-repeat:no-repeat,repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
       #${C.overlayId} .crowd-strip{position:absolute;left:0;right:0;z-index:0;height:34px;overflow:hidden;pointer-events:none}
       #${C.overlayId} .crowd-top{top:0}
       #${C.overlayId} .crowd-bottom{bottom:0}
@@ -1114,12 +1117,25 @@
     $('rol-refresh')?.addEventListener('click', update);
   }
 
-  function courseState(totalHours) {
+  function courseSegmentBounds() {
+    const trackWidth = $('rol-course')?.clientWidth || 1000;
+    const segmentWidth = (trackWidth - C.startLineWidthPx - C.finishLineWidthPx - C.courseGapPx * 4) / 3;
+    const waterStart = C.startLineWidthPx + C.courseGapPx;
+    const waterEnd = waterStart + segmentWidth;
+    const mudStart = waterEnd + C.courseGapPx;
+    const mudEnd = mudStart + segmentWidth;
+    const electricStart = mudEnd + C.courseGapPx;
+    const electricEnd = electricStart + segmentWidth;
+    return { trackWidth, waterStart, waterEnd, mudStart, mudEnd, electricStart, electricEnd };
+  }
+
+  function courseState(totalHours, progress = clamp(totalHours / C.targetHours * 100, 0, 100)) {
     if (totalHours >= C.targetHours) return 'finish';
-    const progress = clamp(totalHours / C.targetHours * 100, 0, 100);
-    if (progress >= 60) return 'electric';
-    if (progress >= 40) return 'mud';
-    if (progress >= 20) return 'water';
+    const bounds = courseSegmentBounds();
+    const x = bounds.trackWidth * clamp(progress, 0, 100) / 100;
+    if (x >= bounds.electricStart && x <= bounds.electricEnd) return 'electric';
+    if (x >= bounds.mudStart && x <= bounds.mudEnd) return 'mud';
+    if (x >= bounds.waterStart && x <= bounds.waterEnd) return 'water';
     return totalHours > 0 ? 'run' : 'idle';
   }
 
@@ -1172,7 +1188,7 @@
     return rows.map((operator, index) => {
       const top = rows.length > 1 ? lanePad + index * laneGap : 50;
       const progress = clamp(operator.total / C.targetHours * 100, 0, 100);
-      const stateClass = `state-${courseState(operator.total)}`;
+      const stateClass = `state-${courseState(operator.total, progress)}`;
       const frameX = framePosition(spriteFrameFor(operator, progress));
       const confetti = finishEventActive(operator.locker, now) ? '<span class="finish-confetti"></span>' : '';
       return `
@@ -1226,7 +1242,8 @@
   }
 
   function courseLabelFor(totalHours) {
-    const stateName = courseState(totalHours);
+    const progress = clamp(totalHours / C.targetHours * 100, 0, 100);
+    const stateName = courseState(totalHours, progress);
     if (stateName === 'water') return 'Water';
     if (stateName === 'mud') return 'Mud';
     if (stateName === 'electric') return 'Electricity';
