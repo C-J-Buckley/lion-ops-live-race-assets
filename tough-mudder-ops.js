@@ -908,8 +908,8 @@
       #${C.overlayId} .crew{display:block;margin-top:4px;font-size:10px;font-weight:1000;letter-spacing:.16em}
       #${C.overlayId} .controls{position:fixed;right:6px;top:5px;z-index:9;display:flex;width:var(--rank-board-w);justify-content:flex-end;gap:2px}
       #${C.overlayId} .course-wrap{position:absolute;left:0;right:calc(var(--rank-board-w) + 12px);top:82px;bottom:10px;overflow:hidden;border:0;border-radius:0;background:#83b80d url("${C.grassBackgroundUrl}") 0 0/220px 220px repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
-      #${C.overlayId} .course-track{--course-gap:${C.courseGapPx}px;--start-line-w:${C.startLineWidthPx}px;--finish-line-w:${C.finishLineWidthPx}px;--course-start:calc(var(--start-line-w) + var(--course-gap));--course-w:calc((100% - var(--start-line-w) - var(--finish-line-w) - (var(--course-gap) * 4)) / 3);position:absolute;left:0;right:0;top:0;bottom:12px;overflow:hidden;border-radius:0;background:#83b80d;background-image:linear-gradient(rgba(31,91,24,.18),rgba(31,91,24,.18)),url("${C.grassBackgroundUrl}");background-position:0 0,0 0;background-size:100% 100%,220px 220px;background-repeat:no-repeat,repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
-      #${C.overlayId} .crowd-strip{position:absolute;left:0;right:0;z-index:0;height:34px;overflow:hidden;pointer-events:none}
+      #${C.overlayId} .course-track{--course-gap:${C.courseGapPx}px;--start-line-w:${C.startLineWidthPx}px;--finish-line-w:${C.finishLineWidthPx}px;--runner-size:clamp(31px,3.9vh,49px);--course-start:calc(var(--start-line-w) + var(--course-gap));--course-w:calc((100% - var(--start-line-w) - var(--finish-line-w) - (var(--course-gap) * 4)) / 3);position:absolute;left:0;right:0;top:0;bottom:12px;overflow:hidden;border-radius:0;background:#83b80d;background-image:linear-gradient(rgba(31,91,24,.18),rgba(31,91,24,.18)),url("${C.grassBackgroundUrl}");background-position:0 0,0 0;background-size:100% 100%,220px 220px;background-repeat:no-repeat,repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
+      #${C.overlayId} .crowd-strip{position:absolute;left:0;right:0;z-index:2;height:34px;overflow:hidden;pointer-events:none}
       #${C.overlayId} .crowd-top{top:0}
       #${C.overlayId} .crowd-bottom{bottom:0}
       #${C.overlayId} .spectator{position:absolute;left:var(--x);top:var(--y);width:9px;height:17px;background:var(--shirt);border:1px solid rgba(15,23,42,.55);box-shadow:0 2px 0 rgba(15,23,42,.2);animation:rolCrowdCheer calc(1s + var(--delay)) steps(2) infinite}
@@ -930,7 +930,7 @@
       #${C.overlayId}.is-finish-flash .finish-line{animation:rolFinishFlash 1.4s steps(4) 2}
       #${C.overlayId} .lane{position:absolute;left:0;right:0;height:12px;border-bottom:0}
       #${C.overlayId} .lane-label{display:none}
-      #${C.overlayId} .runner{--runner-size:clamp(31px,3.9vh,49px);position:absolute;top:calc(var(--runner-size) * -.38);left:min(calc(var(--progress) * 1%),calc(100% - 11px));width:var(--runner-size);height:var(--runner-size);transform:translateX(-50%);z-index:2}
+      #${C.overlayId} .runner{position:absolute;top:calc(var(--runner-size) * -.38);left:min(calc(var(--progress) * 1%),calc(100% - 11px));width:var(--runner-size);height:var(--runner-size);transform:translateX(-50%);z-index:5}
       #${C.overlayId} .locker-badge{position:absolute;left:calc(var(--runner-size) * -.55);top:calc(var(--runner-size) * .43);z-index:0;min-width:calc(var(--runner-size) * .55);height:calc(var(--runner-size) * .34);padding:0 4px;border:1px solid rgba(15,23,42,.52);border-radius:4px;color:#fff;background:rgba(15,23,42,.82);box-shadow:3px 3px 0 rgba(0,0,0,.32);font-size:clamp(7px,calc(var(--runner-size) * .23),10px);line-height:calc(var(--runner-size) * .31);font-weight:1000;text-align:center;text-shadow:1px 1px 0 #000}
       #${C.overlayId} .sprite{position:relative;z-index:1;width:var(--runner-size);height:var(--runner-size);background-image:url("${C.robotSpriteUrl}");background-repeat:no-repeat;background-size:400% 500%;background-position-x:var(--frame-x,0%);background-position-y:25%}
       #${C.overlayId} .state-idle .sprite{background-position-y:0}
@@ -1129,13 +1129,14 @@
     return { trackWidth, waterStart, waterEnd, mudStart, mudEnd, electricStart, electricEnd };
   }
 
-  function courseState(totalHours, progress = clamp(totalHours / C.targetHours * 100, 0, 100)) {
+  function courseState(totalHours, progress = clamp(totalHours / C.targetHours * 100, 0, 100), runnerSize = 0) {
     if (totalHours >= C.targetHours) return 'finish';
     const bounds = courseSegmentBounds();
-    const x = bounds.trackWidth * clamp(progress, 0, 100) / 100;
-    if (x >= bounds.electricStart && x <= bounds.electricEnd) return 'electric';
-    if (x >= bounds.mudStart && x <= bounds.mudEnd) return 'mud';
-    if (x >= bounds.waterStart && x <= bounds.waterEnd) return 'water';
+    const centerX = bounds.trackWidth * clamp(progress, 0, 100) / 100;
+    const leadingX = centerX + runnerSize / 2;
+    if (leadingX >= bounds.electricStart && centerX <= bounds.electricEnd) return 'electric';
+    if (leadingX >= bounds.mudStart && centerX <= bounds.mudEnd) return 'mud';
+    if (leadingX >= bounds.waterStart && centerX <= bounds.waterEnd) return 'water';
     return totalHours > 0 ? 'run' : 'idle';
   }
 
@@ -1183,12 +1184,14 @@
     const now = new Date();
     const rows = operators.slice(0, C.maxStations);
     if (!rows.length) return '<div class="lane" style="top:0"><span class="lane-label">--</span></div>';
+    const courseNode = $('rol-course');
+    const runnerSize = parseFloat(getComputedStyle(courseNode || document.documentElement).getPropertyValue('--runner-size')) || 49;
     const lanePad = rows.length > 1 ? 5.5 : 0;
     const laneGap = rows.length > 1 ? (100 - lanePad * 2) / (rows.length - 1) : 0;
     return rows.map((operator, index) => {
       const top = rows.length > 1 ? lanePad + index * laneGap : 50;
       const progress = clamp(operator.total / C.targetHours * 100, 0, 100);
-      const stateClass = `state-${courseState(operator.total, progress)}`;
+      const stateClass = `state-${courseState(operator.total, progress, runnerSize)}`;
       const frameX = framePosition(spriteFrameFor(operator, progress));
       const confetti = finishEventActive(operator.locker, now) ? '<span class="finish-confetti"></span>' : '';
       return `
