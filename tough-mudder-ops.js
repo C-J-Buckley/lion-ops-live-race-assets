@@ -6,15 +6,15 @@
     styleId: 'tough-mudder-ops-overlay-style',
     host: 'robohub.apps.openai.org',
     apiUrl: 'https://robohub.apps.openai.org/api/collection_ops/shift?location=lion',
-    refreshMs: 15000,
+    refreshMs: 60000,
+    announcerMs: 15 * 60 * 1000,
+    announcerBubbleMs: 3 * 60 * 1000,
     title: 'LION OPS LIVE RACE',
     crew: 'LION Nightshift Crew',
     assetBaseUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/',
     robotSpriteUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/robot-sprite-transparent.png',
-    fireTextureUrl: 'https://raw.githubusercontent.com/C-J-Buckley/lion-ops-live-race-assets/main/Assets/Fire-Course%203.gif',
     waterTextureUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Water.gif',
     mudTextureUrl: 'https://raw.githubusercontent.com/C-J-Buckley/lion-ops-live-race-assets/main/Assets/Mud-Course2.gif',
-    iceTextureUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Ice.png',
     grassBackgroundUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/GrassBackground.png',
     electricGroundUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/ElectricGround.png',
     thunderTextureUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Thunder_Transparent.gif',
@@ -166,6 +166,7 @@
     activity: {},
     spriteFrames: {},
     announcerBucket: null,
+    announcerShownAt: 0,
     finishedLockers: {},
     finishEvents: {},
     latestFinish: null
@@ -881,17 +882,17 @@
     style.id = C.styleId;
     style.textContent = `
       @keyframes rolFade{from{opacity:0}to{opacity:1}}
-      @keyframes rolMudParticles{0%{opacity:1;transform:translate(0,0)}50%{opacity:.9;transform:translate(-4px,1px)}100%{opacity:0;transform:translate(-8px,2px)}}
       @keyframes rolFinalPop{0%{opacity:0;transform:scale(.55)}22%{opacity:1;transform:scale(1.18)}100%{opacity:1;transform:scale(1)}}
       @keyframes rolSpark{0%,72%,100%{opacity:0;transform:scale(.72) rotate(0deg)}76%,84%{opacity:1;transform:scale(1.15) rotate(18deg)}}
       @keyframes rolShock{0%,70%,100%{filter:none}76%,84%{filter:brightness(1.35) drop-shadow(0 0 10px #fde047)}}
-      @keyframes rolIceTwinkle{0%,100%{opacity:.12;filter:brightness(1)}33%{opacity:.95;filter:brightness(1.9)}66%{opacity:.38;filter:brightness(1.2)}}
       @keyframes rolChanged{0%{background:rgba(250,204,21,.35)}100%{background:transparent}}
       @keyframes rolAnnouncerPop{0%{opacity:0;transform:translateY(10px) scale(.9)}18%{opacity:1;transform:translateY(-2px) scale(1.03)}100%{opacity:1;transform:translateY(0) scale(1)}}
       @keyframes rolBubblePop{0%{opacity:0;transform:translateY(5px) scale(.86)}25%{opacity:1;transform:translateY(-1px) scale(1.04)}100%{opacity:1;transform:translateY(0) scale(1)}}
       @keyframes rolFinishFlash{0%,100%{filter:none}18%,42%{filter:brightness(1.6) drop-shadow(0 0 12px #facc15)}}
       @keyframes rolFinishRow{0%{background:rgba(250,204,21,.46)}100%{background:transparent}}
       @keyframes rolConfetti{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--confetti-x),var(--confetti-y)) scale(.3)}}
+      @keyframes rolCrowdCheer{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+      @keyframes rolBalloonBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
       #${C.overlayId}{--rank-board-w:300px;position:fixed;inset:0;z-index:2147483647;overflow:hidden;color:#12304a;background:#83b80d url("${C.grassBackgroundUrl}") 0 0/220px 220px repeat;image-rendering:pixelated;image-rendering:crisp-edges;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;animation:rolFade .16s ease}
       #${C.overlayId} *{box-sizing:border-box}
       #${C.overlayId} button{min-width:42px;height:9px;border:1px solid rgba(12,45,72,.34);border-radius:3px;padding:0 8px;color:#072033;background:rgba(255,255,255,.78);font:inherit;font-size:6px;line-height:7px;font-weight:1000;letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
@@ -903,23 +904,26 @@
       #${C.overlayId} .title{font-size:clamp(24px,2.7vw,42px);line-height:.9;font-weight:1000;letter-spacing:.01em;text-transform:uppercase}
       #${C.overlayId} .crew{display:block;margin-top:4px;font-size:10px;font-weight:1000;letter-spacing:.16em}
       #${C.overlayId} .controls{position:fixed;right:6px;top:5px;z-index:9;display:flex;width:var(--rank-board-w);justify-content:flex-end;gap:2px}
-      #${C.overlayId} .course-wrap{position:absolute;left:0;right:calc(var(--rank-board-w) + 56px);top:82px;bottom:10px;overflow:hidden;border:0;border-radius:0;background:#83b80d url("${C.grassBackgroundUrl}") 0 0/220px 220px repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
-      #${C.overlayId} .course-track{--course-gap:10px;--course-w:calc((100% - 20px - 22px - (var(--course-gap) * 4)) / 5);position:absolute;left:0;right:0;top:0;bottom:12px;overflow:hidden;border-radius:0;background:#83b80d;background-image:linear-gradient(rgba(31,91,24,.18),rgba(31,91,24,.18)),url("${C.grassBackgroundUrl}");background-position:0 0,0 0;background-size:100% 100%,220px 220px;background-repeat:no-repeat,repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
-      #${C.overlayId} .segment{position:absolute;top:0;bottom:0;border-left:0;border-right:0}
-      #${C.overlayId} .segment.fire{left:20px;width:var(--course-w);background:#f97316 url("${C.fireTextureUrl}") 50% 0/96px 96px repeat;image-rendering:pixelated;image-rendering:crisp-edges;overflow:hidden}
-      #${C.overlayId} .segment.fire:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(127,29,29,.18),rgba(250,204,21,.12),rgba(127,29,29,.18));mix-blend-mode:screen;pointer-events:none}
-      #${C.overlayId} .segment.water{left:calc(20px + var(--course-w) + var(--course-gap));width:var(--course-w);background:#22c5eb url("${C.waterTextureUrl}") 0 0/100% auto repeat-y;image-rendering:pixelated;image-rendering:crisp-edges}
-      #${C.overlayId} .segment.mud{left:calc(20px + var(--course-w) + var(--course-gap) + var(--course-w) + var(--course-gap));width:var(--course-w);background:#4e2d18 url("${C.mudTextureUrl}") 0 0/112px 112px repeat;image-rendering:pixelated;image-rendering:crisp-edges;overflow:hidden}
-      #${C.overlayId} .segment.electric{left:calc(20px + var(--course-w) + var(--course-gap) + var(--course-w) + var(--course-gap) + var(--course-w) + var(--course-gap));width:var(--course-w);background:#8b5a34 url("${C.electricGroundUrl}") 50% 50%/160px 160px repeat;image-rendering:pixelated;image-rendering:crisp-edges;overflow:hidden}
+      #${C.overlayId} .course-wrap{position:absolute;left:0;right:calc(var(--rank-board-w) + 12px);top:82px;bottom:10px;overflow:hidden;border:0;border-radius:0;background:#83b80d url("${C.grassBackgroundUrl}") 0 0/220px 220px repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
+      #${C.overlayId} .course-track{--course-gap:10px;--start-line-w:35px;--finish-line-w:37px;--course-start:calc(var(--start-line-w) + var(--course-gap));--course-w:calc((100% - var(--start-line-w) - var(--finish-line-w) - (var(--course-gap) * 4)) / 3);position:absolute;left:0;right:0;top:0;bottom:12px;overflow:hidden;border-radius:0;background:#83b80d;background-image:linear-gradient(rgba(31,91,24,.18),rgba(31,91,24,.18)),url("${C.grassBackgroundUrl}");background-position:0 0,0 0;background-size:100% 100%,220px 220px;background-repeat:no-repeat,repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
+      #${C.overlayId} .crowd-strip{position:absolute;left:0;right:0;z-index:0;height:34px;overflow:hidden;pointer-events:none}
+      #${C.overlayId} .crowd-top{top:0}
+      #${C.overlayId} .crowd-bottom{bottom:0}
+      #${C.overlayId} .spectator{position:absolute;left:var(--x);top:var(--y);width:9px;height:17px;background:var(--shirt);border:1px solid rgba(15,23,42,.55);box-shadow:0 2px 0 rgba(15,23,42,.2);animation:rolCrowdCheer calc(1s + var(--delay)) steps(2) infinite}
+      #${C.overlayId} .spectator:before{content:"";position:absolute;left:2px;top:-6px;width:5px;height:5px;border-radius:50%;background:#f8c9a5;border:1px solid rgba(15,23,42,.45)}
+      #${C.overlayId} .spectator:after{content:"";position:absolute;left:-3px;top:2px;width:15px;height:2px;background:var(--shirt);box-shadow:0 -4px 0 var(--shirt)}
+      #${C.overlayId} .balloon{position:absolute;left:var(--x);top:var(--y);width:10px;height:13px;border-radius:50% 50% 45% 45%;background:var(--balloon);box-shadow:inset -2px -2px 0 rgba(15,23,42,.18);animation:rolBalloonBob calc(2.4s + var(--delay)) ease-in-out infinite}
+      #${C.overlayId} .balloon:after{content:"";position:absolute;left:4px;top:12px;width:1px;height:18px;background:rgba(15,23,42,.45)}
+      #${C.overlayId} .segment{position:absolute;z-index:1;top:0;bottom:0;border-left:0;border-right:0}
+      #${C.overlayId} .segment.water{left:var(--course-start);width:var(--course-w);background:#22c5eb url("${C.waterTextureUrl}") 0 0/100% auto repeat-y;image-rendering:pixelated;image-rendering:crisp-edges}
+      #${C.overlayId} .segment.mud{left:calc(var(--course-start) + var(--course-w) + var(--course-gap));width:var(--course-w);background:#4e2d18 url("${C.mudTextureUrl}") 0 0/112px 112px repeat;image-rendering:pixelated;image-rendering:crisp-edges;overflow:hidden}
+      #${C.overlayId} .segment.electric{left:calc(var(--course-start) + var(--course-w) + var(--course-gap) + var(--course-w) + var(--course-gap));width:var(--course-w);background:#8b5a34 url("${C.electricGroundUrl}") 50% 50%/160px 160px repeat;image-rendering:pixelated;image-rendering:crisp-edges;overflow:hidden}
       #${C.overlayId} .segment.electric:before{content:"";position:absolute;inset:0;z-index:1;background:url("${C.thunderTextureUrl}") 16% 0/68px 188px repeat-y,url("${C.thunderTextureUrl}") 62% 42px/64px 178px repeat-y;opacity:.95;mix-blend-mode:screen;pointer-events:none}
       #${C.overlayId} .segment.electric:after{content:"";position:absolute;inset:4px 0;z-index:2;background:url("${C.barbedWireUrl}") 50% 0/190px 96px repeat;opacity:.78;pointer-events:none}
-      #${C.overlayId} .segment.ice{left:calc(20px + var(--course-w) + var(--course-gap) + var(--course-w) + var(--course-gap) + var(--course-w) + var(--course-gap) + var(--course-w) + var(--course-gap));width:var(--course-w);background:#7dd3fc url("${C.iceTextureUrl}") 0 0/112px 112px repeat;image-rendering:pixelated;image-rendering:crisp-edges;overflow:hidden}
-      #${C.overlayId} .segment.ice:before,#${C.overlayId} .segment.ice:after{content:"";position:absolute;inset:0;z-index:1;background:radial-gradient(circle,#fff 0 2px,transparent 3px),radial-gradient(circle,#e0f2fe 0 2px,transparent 3px),radial-gradient(circle,#bae6fd 0 1px,transparent 2px);background-size:54px 58px,86px 74px,42px 46px;animation:rolIceTwinkle 2.4s steps(3) infinite;pointer-events:none}
-      #${C.overlayId} .segment.ice:after{background-position:25px 16px,44px 32px,12px 25px;opacity:.55;animation-duration:3.1s;animation-delay:.7s}
-      #${C.overlayId} .start-line{position:absolute;left:0;top:0;bottom:0;width:20px;background:repeating-linear-gradient(0deg,#fef3c7 0 8px,#92400e 8px 16px)}
-      #${C.overlayId} .hour-marker{position:absolute;top:0;bottom:0;width:0;border-left:0}
+      #${C.overlayId} .start-line{position:absolute;z-index:1;left:0;top:0;bottom:0;width:var(--start-line-w);background:repeating-linear-gradient(0deg,#fef3c7 0 8px,#92400e 8px 16px)}
+      #${C.overlayId} .hour-marker{position:absolute;z-index:1;top:0;bottom:0;width:0;border-left:0}
       #${C.overlayId} .marker-1{left:20%}#${C.overlayId} .marker-2{left:40%}#${C.overlayId} .marker-3{left:60%}#${C.overlayId} .marker-4{left:80%}
-      #${C.overlayId} .finish-line{position:absolute;right:0;top:0;bottom:0;width:22px;background:repeating-linear-gradient(0deg,#fff 0 8px,#111827 8px 16px)}
+      #${C.overlayId} .finish-line{position:absolute;z-index:1;right:0;top:0;bottom:0;width:var(--finish-line-w);background:repeating-linear-gradient(0deg,#fff 0 8px,#111827 8px 16px)}
       #${C.overlayId}.is-finish-flash .finish-line{animation:rolFinishFlash 1.4s steps(4) 2}
       #${C.overlayId} .lane{position:absolute;left:0;right:0;height:12px;border-bottom:0}
       #${C.overlayId} .lane-label{display:none}
@@ -927,15 +931,10 @@
       #${C.overlayId} .locker-badge{position:absolute;left:calc(var(--runner-size) * -.55);top:calc(var(--runner-size) * .43);z-index:0;min-width:calc(var(--runner-size) * .55);height:calc(var(--runner-size) * .34);padding:0 4px;border:1px solid rgba(15,23,42,.52);border-radius:4px;color:#fff;background:rgba(15,23,42,.82);box-shadow:3px 3px 0 rgba(0,0,0,.32);font-size:clamp(7px,calc(var(--runner-size) * .23),10px);line-height:calc(var(--runner-size) * .31);font-weight:1000;text-align:center;text-shadow:1px 1px 0 #000}
       #${C.overlayId} .sprite{position:relative;z-index:1;width:var(--runner-size);height:var(--runner-size);background-image:url("${C.robotSpriteUrl}");background-repeat:no-repeat;background-size:400% 500%;background-position-x:var(--frame-x,0%);background-position-y:25%}
       #${C.overlayId} .state-idle .sprite{background-position-y:0}
-      #${C.overlayId} .state-fire .sprite{background-position-y:25%;filter:drop-shadow(0 0 5px rgba(251,146,60,.85))}
       #${C.overlayId} .state-water .sprite{background-position-y:100%;clip-path:inset(6px 8px 6px 6px)}
-      #${C.overlayId} .state-mud .sprite{background-position-y:50%}
-      #${C.overlayId} .state-mud:before,#${C.overlayId} .state-mud:after{content:"";position:absolute;z-index:3;width:4px;height:4px;background:#4e2d18;image-rendering:pixelated;animation:rolMudParticles .55s steps(3) infinite;pointer-events:none}
-      #${C.overlayId} .state-mud:before{left:11px;bottom:7px;box-shadow:6px 1px #7a4a25,12px 3px #4e2d18,18px 0 #b07a45}
-      #${C.overlayId} .state-mud:after{left:25px;bottom:5px;background:#7a4a25;box-shadow:5px 2px #4e2d18,10px 0 #b07a45,16px 3px #7a4a25;animation-delay:.18s}
+      #${C.overlayId} .state-mud .sprite{background-position-y:25%}
       #${C.overlayId} .state-electric .sprite{background-position-y:50%;animation:rolShock 2.8s linear infinite}
       #${C.overlayId} .state-electric:before{content:"";position:absolute;right:-9px;top:-7px;width:17px;height:20px;background:#fde047;clip-path:polygon(42% 0,100% 0,62% 39%,100% 39%,24% 100%,42% 53%,0 53%);opacity:0;animation:rolSpark 2.8s linear infinite}
-      #${C.overlayId} .state-ice .sprite{background-position-y:25%;filter:saturate(1.15) brightness(1.08) drop-shadow(0 0 4px rgba(125,211,252,.9))}
       #${C.overlayId} .state-finish .sprite{background-position-y:75%}
       #${C.overlayId} .finish-confetti{position:absolute;left:8px;top:-5px;z-index:4;width:4px;height:4px;background:#facc15;box-shadow:10px 4px #38bdf8,18px -2px #fb7185,28px 6px #a3e635,36px -5px #f97316,44px 3px #e879f9;animation:rolConfetti 1.5s ease-out both;--confetti-x:-24px;--confetti-y:-44px;pointer-events:none}
       #${C.overlayId} .course-hold{position:absolute;z-index:6;inset:0;display:none;place-items:center;background:rgba(20,83,45,.28);backdrop-filter:blur(2px);--watch-angle:0deg}
@@ -968,6 +967,7 @@
       #${C.overlayId} .announcer-panel{--announcer-size:clamp(190px,calc(100vh - 610px),var(--rank-board-w));position:fixed;right:12px;bottom:10px;z-index:7;width:var(--announcer-size);height:var(--announcer-size);border-radius:50%;overflow:hidden;background:radial-gradient(circle at 42% 28%,rgba(23,59,120,.75) 0,rgba(7,26,58,.75) 58%,rgba(3,11,29,.75) 100%);border:4px solid rgba(191,219,254,.72);box-shadow:0 16px 26px rgba(0,0,0,.42),0 5px 0 rgba(2,6,23,.34),0 0 18px rgba(59,130,246,.24),inset 0 0 0 4px rgba(255,255,255,.07);animation:rolAnnouncerPop .45s ease both}
       #${C.overlayId} .announcer-panel:before{content:"";position:absolute;inset:7px;border-radius:50%;border:1px solid rgba(147,197,253,.34);pointer-events:none}
       #${C.overlayId} .announcer-bubble{position:absolute;left:11%;top:calc(10% + 5px);z-index:3;width:78%;min-height:24%;padding:8px 10px;border:2px solid #071a3a;border-radius:17px;background:#f8fbff;color:#071a3a;font-size:clamp(9px,calc(var(--announcer-size) * .045),13px);line-height:1.06;font-weight:1000;text-align:center;text-transform:none;letter-spacing:.01em;box-shadow:0 4px 0 rgba(2,6,23,.28);animation:rolBubblePop .36s ease both}
+      #${C.overlayId} .announcer-bubble.is-hidden{display:none}
       #${C.overlayId} .announcer-bubble:after{content:"";position:absolute;left:45%;bottom:-10px;width:15px;height:15px;background:#f8fbff;border-right:2px solid #071a3a;border-bottom:2px solid #071a3a;transform:rotate(45deg)}
       #${C.overlayId} .announcer-title{position:absolute;left:0;right:0;bottom:5%;z-index:4;color:#bfdbfe;font-size:clamp(7px,calc(var(--announcer-size) * .034),10px);line-height:1.05;font-weight:1000;letter-spacing:.11em;text-align:center;text-transform:uppercase;text-shadow:0 2px 0 #020617}
       #${C.overlayId} .announcer-figure{position:absolute;left:50%;bottom:calc(1% - 18px);z-index:2;width:calc(80% + 3px);height:calc(72% + 3px);transform:translateX(-50%);background-image:url("${C.commentatorUrls.thinking}");background-repeat:no-repeat;background-position:center bottom;background-size:contain;filter:drop-shadow(0 8px 7px rgba(0,0,0,.38))}
@@ -1026,6 +1026,30 @@
     )).join('');
   }
 
+  function crowdHtml() {
+    const shirts = ['#ef4444', '#f97316', '#facc15', '#22c55e', '#38bdf8', '#a78bfa', '#f472b6'];
+    const balloons = ['#ef4444', '#facc15', '#38bdf8', '#f472b6'];
+    const spectators = Array.from({ length: 18 }, (_, index) => {
+      const top = index % 2 === 0;
+      const x = 5 + index * 5.2;
+      const y = top ? 9 + (index % 3) * 4 : 8 + ((index + 1) % 3) * 4;
+      const shirt = shirts[index % shirts.length];
+      const delay = `${(index % 5) * 0.13}s`;
+      return `<span class="spectator" style="--x:${x.toFixed(1)}%;--y:${y}px;--shirt:${shirt};--delay:${delay}"></span>`;
+    }).join('');
+    const balloonHtml = Array.from({ length: 6 }, (_, index) => {
+      const x = 12 + index * 15.5;
+      const y = 2 + (index % 2) * 5;
+      const color = balloons[index % balloons.length];
+      const delay = `${(index % 4) * 0.2}s`;
+      return `<span class="balloon" style="--x:${x.toFixed(1)}%;--y:${y}px;--balloon:${color};--delay:${delay}"></span>`;
+    }).join('');
+    return `
+      <div class="crowd-strip crowd-top" aria-hidden="true">${spectators}${balloonHtml}</div>
+      <div class="crowd-strip crowd-bottom" aria-hidden="true">${spectators}</div>
+    `;
+  }
+
   function shell(overlay) {
     overlay.innerHTML = `
       <div class="shell">
@@ -1038,16 +1062,15 @@
         </header>
         <main class="course-wrap" aria-label="LION OPS LIVE RACE course">
           <div class="course-track" id="rol-course">
+            ${crowdHtml()}
             <div class="start-line"></div>
             <div class="hour-marker marker-1"></div>
             <div class="hour-marker marker-2"></div>
             <div class="hour-marker marker-3"></div>
             <div class="hour-marker marker-4"></div>
-            <div class="segment fire"></div>
             <div class="segment water"></div>
             <div class="segment mud"></div>
             <div class="segment electric"></div>
-            <div class="segment ice"></div>
             <div class="finish-line"></div>
           </div>
           <div class="course-hold" id="rol-course-hold">
@@ -1094,11 +1117,9 @@
   function courseState(totalHours) {
     if (totalHours >= C.targetHours) return 'finish';
     const progress = clamp(totalHours / C.targetHours * 100, 0, 100);
-    if (progress >= 80) return 'ice';
     if (progress >= 60) return 'electric';
     if (progress >= 40) return 'mud';
     if (progress >= 20) return 'water';
-    if (progress > 0) return 'fire';
     return totalHours > 0 ? 'run' : 'idle';
   }
 
@@ -1206,11 +1227,9 @@
 
   function courseLabelFor(totalHours) {
     const stateName = courseState(totalHours);
-    if (stateName === 'fire') return 'Fire';
     if (stateName === 'water') return 'Water';
     if (stateName === 'mud') return 'Mud';
     if (stateName === 'electric') return 'Electricity';
-    if (stateName === 'ice') return 'Ice';
     if (stateName === 'finish') return 'Finish';
     return totalHours > 0 ? 'Run' : 'Start';
   }
@@ -1231,7 +1250,7 @@
 
     const ranked = rankedOperators(operators);
     const leader = ranked[0];
-    const bucket = Math.floor(now.getTime() / (15 * 60 * 1000));
+    const bucket = Math.floor(now.getTime() / C.announcerMs);
     const type = bucket % 9;
 
     if (type === 2 || type === 5 || type === 8) {
@@ -1267,7 +1286,7 @@
 
   function updateAnnouncer(operators, rankByLocker, hold, now) {
     const commentary = announcerCommentary(operators, rankByLocker, hold, now);
-    const bucket = `${Math.floor(now.getTime() / (15 * 60 * 1000))}:${commentary.expression}:${commentary.text}`;
+    const bucket = `${Math.floor(now.getTime() / C.announcerMs)}:${commentary.expression}:${commentary.text}`;
     const textNode = $('rol-announcer-text');
     const figure = $('rol-announcer-figure');
     if (!textNode || !figure) return;
@@ -1275,6 +1294,7 @@
     figure.dataset.expression = commentary.expression;
     if (state.announcerBucket !== bucket) {
       state.announcerBucket = bucket;
+      state.announcerShownAt = now.getTime();
       const panel = textNode.closest('.announcer-panel');
       panel?.classList.remove('is-talking');
       void panel?.offsetWidth;
@@ -1283,6 +1303,8 @@
       void textNode.offsetWidth;
       textNode.style.animation = '';
     }
+    const forceVisible = Boolean(hold) || (state.latestFinish && now.getTime() - state.latestFinish.at <= 15000);
+    textNode.classList.toggle('is-hidden', !forceVisible && now.getTime() - state.announcerShownAt >= C.announcerBubbleMs);
   }
 
   function showError(message) {
@@ -1319,16 +1341,15 @@
     $('rol-total-hours').textContent = totalHours.toFixed(2);
     $('rol-avg-hours').textContent = averageHours.toFixed(2);
     $('rol-course').innerHTML = `
+      ${crowdHtml()}
       <div class="start-line"></div>
       <div class="hour-marker marker-1"></div>
       <div class="hour-marker marker-2"></div>
       <div class="hour-marker marker-3"></div>
       <div class="hour-marker marker-4"></div>
-      <div class="segment fire"></div>
       <div class="segment water"></div>
       <div class="segment mud"></div>
       <div class="segment electric"></div>
-      <div class="segment ice"></div>
       <div class="finish-line"></div>
       ${courseHtml(activeOperators)}
     `;
