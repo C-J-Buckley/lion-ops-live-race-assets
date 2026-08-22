@@ -9,6 +9,7 @@
     refreshMs: 60000,
     announcerMs: 15 * 60 * 1000,
     announcerBubbleMs: 3 * 60 * 1000,
+    dadJokeMs: 60 * 60 * 1000,
     courseGapPx: 10,
     startLineWidthPx: 35,
     finishLineWidthPx: 37,
@@ -22,6 +23,7 @@
     electricGroundUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/ElectricGround.png',
     thunderTextureUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Thunder_Transparent.gif',
     barbedWireUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/BarbedWire.png',
+    crowdCheerUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Crowd-Cheer.gif',
     commentatorUrls: {
       excited: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Commentator_Excited.png',
       thinking: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Commentator_thinking.png',
@@ -116,6 +118,19 @@
     { expression: 'starry', text: "Today's Race is brought to you by Shift Coordinators...The Task Experts!" }
   ];
 
+  const DAD_JOKES = [
+    'What type of bear is the most conceded? Pan-Duh!',
+    'When does a joke become a dad joke? When it becomes apparent.',
+    "I could tell a joke about pizza, but it's a little cheesy.",
+    'What do you get when you cross a fish with an elephant? Swimming trunks.',
+    'Why did the car take a nap? It was tired.',
+    "What's the easiest building to lift? A lighthouse.",
+    'What kind of felines can bowl? Alley cats.',
+    'Where do birds stay when they travel? Someplace cheep.',
+    'When is a car not a car? When it turns into a parking lot.',
+    'Where do sheep go on vacation? The Baaaa-hamas.'
+  ];
+
   const normalizeNameKey = value => String(value ?? '').trim().replace(/\s+/g, ' ').toLowerCase();
   const normalizePath = value => String(value || '').replace(/\/$/, '');
   const $ = id => document.getElementById(id);
@@ -170,6 +185,8 @@
     spriteFrames: {},
     announcerBucket: null,
     announcerShownAt: 0,
+    dadJokeHour: null,
+    dadJokeIndex: null,
     finishedLockers: {},
     finishEvents: {},
     latestFinish: null
@@ -894,8 +911,6 @@
       @keyframes rolFinishFlash{0%,100%{filter:none}18%,42%{filter:brightness(1.6) drop-shadow(0 0 12px #facc15)}}
       @keyframes rolFinishRow{0%{background:rgba(250,204,21,.46)}100%{background:transparent}}
       @keyframes rolConfetti{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--confetti-x),var(--confetti-y)) scale(.3)}}
-      @keyframes rolCrowdCheer{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
-      @keyframes rolBalloonBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
       #${C.overlayId}{--rank-board-w:380px;position:fixed;inset:0;z-index:2147483647;overflow:hidden;color:#12304a;background:#83b80d url("${C.grassBackgroundUrl}") 0 0/220px 220px repeat;image-rendering:pixelated;image-rendering:crisp-edges;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;animation:rolFade .16s ease}
       #${C.overlayId} *{box-sizing:border-box}
       #${C.overlayId} button{min-width:42px;height:9px;border:1px solid rgba(12,45,72,.34);border-radius:3px;padding:0 8px;color:#072033;background:rgba(255,255,255,.78);font:inherit;font-size:6px;line-height:7px;font-weight:1000;letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
@@ -909,14 +924,7 @@
       #${C.overlayId} .controls{position:fixed;right:6px;top:5px;z-index:9;display:flex;width:var(--rank-board-w);justify-content:flex-end;gap:2px}
       #${C.overlayId} .course-wrap{position:absolute;left:0;right:calc(var(--rank-board-w) + 12px);top:82px;bottom:10px;overflow:hidden;border:0;border-radius:0;background:#83b80d url("${C.grassBackgroundUrl}") 0 0/220px 220px repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
       #${C.overlayId} .course-track{--course-gap:${C.courseGapPx}px;--start-line-w:${C.startLineWidthPx}px;--finish-line-w:${C.finishLineWidthPx}px;--runner-size:clamp(31px,3.9vh,49px);--course-start:calc(var(--start-line-w) + var(--course-gap));--course-w:calc((100% - var(--start-line-w) - var(--finish-line-w) - (var(--course-gap) * 4)) / 3);position:absolute;left:0;right:0;top:0;bottom:12px;overflow:hidden;border-radius:0;background:#83b80d;background-image:linear-gradient(rgba(31,91,24,.18),rgba(31,91,24,.18)),url("${C.grassBackgroundUrl}");background-position:0 0,0 0;background-size:100% 100%,220px 220px;background-repeat:no-repeat,repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
-      #${C.overlayId} .crowd-strip{position:absolute;left:0;right:0;z-index:2;height:34px;overflow:hidden;pointer-events:none}
-      #${C.overlayId} .crowd-top{top:0}
-      #${C.overlayId} .crowd-bottom{bottom:0}
-      #${C.overlayId} .spectator{position:absolute;left:var(--x);top:var(--y);width:9px;height:17px;background:var(--shirt);border:1px solid rgba(15,23,42,.55);box-shadow:0 2px 0 rgba(15,23,42,.2);animation:rolCrowdCheer calc(1s + var(--delay)) steps(2) infinite}
-      #${C.overlayId} .spectator:before{content:"";position:absolute;left:2px;top:-6px;width:5px;height:5px;border-radius:50%;background:#f8c9a5;border:1px solid rgba(15,23,42,.45)}
-      #${C.overlayId} .spectator:after{content:"";position:absolute;left:-3px;top:2px;width:15px;height:2px;background:var(--shirt);box-shadow:0 -4px 0 var(--shirt)}
-      #${C.overlayId} .balloon{position:absolute;left:var(--x);top:var(--y);width:10px;height:13px;border-radius:50% 50% 45% 45%;background:var(--balloon);box-shadow:inset -2px -2px 0 rgba(15,23,42,.18);animation:rolBalloonBob calc(2.4s + var(--delay)) ease-in-out infinite}
-      #${C.overlayId} .balloon:after{content:"";position:absolute;left:4px;top:12px;width:1px;height:18px;background:rgba(15,23,42,.45)}
+      #${C.overlayId} .crowd-cheer{--course-area-w:calc(100vw - var(--rank-board-w) - 12px);--course-w:calc((var(--course-area-w) - ${C.startLineWidthPx + C.finishLineWidthPx + C.courseGapPx * 4}px) / 3);position:fixed;z-index:4;left:calc(${C.startLineWidthPx + C.courseGapPx * 2}px + var(--course-w));top:8px;width:calc((var(--course-w) * 2) + ${C.courseGapPx}px);height:50px;background:url("${C.crowdCheerUrl}") 0 0/120px 50px repeat-x;image-rendering:pixelated;image-rendering:crisp-edges;pointer-events:none}
       #${C.overlayId} .segment{position:absolute;z-index:1;top:0;bottom:0;border-left:0;border-right:0}
       #${C.overlayId} .segment.water{left:var(--course-start);width:var(--course-w);background:#22c5eb url("${C.waterTextureUrl}") 0 0/100% auto repeat-y;image-rendering:pixelated;image-rendering:crisp-edges}
       #${C.overlayId} .segment.mud{left:calc(var(--course-start) + var(--course-w) + var(--course-gap));width:var(--course-w);background:#4e2d18 url("${C.mudTextureUrl}") 0 0/112px 112px repeat;image-rendering:pixelated;image-rendering:crisp-edges;overflow:hidden}
@@ -1030,27 +1038,7 @@
   }
 
   function crowdHtml() {
-    const shirts = ['#ef4444', '#f97316', '#facc15', '#22c55e', '#38bdf8', '#a78bfa', '#f472b6'];
-    const balloons = ['#ef4444', '#facc15', '#38bdf8', '#f472b6'];
-    const spectators = Array.from({ length: 18 }, (_, index) => {
-      const top = index % 2 === 0;
-      const x = 5 + index * 5.2;
-      const y = top ? 9 + (index % 3) * 4 : 8 + ((index + 1) % 3) * 4;
-      const shirt = shirts[index % shirts.length];
-      const delay = `${(index % 5) * 0.13}s`;
-      return `<span class="spectator" style="--x:${x.toFixed(1)}%;--y:${y}px;--shirt:${shirt};--delay:${delay}"></span>`;
-    }).join('');
-    const balloonHtml = Array.from({ length: 6 }, (_, index) => {
-      const x = 12 + index * 15.5;
-      const y = 2 + (index % 2) * 5;
-      const color = balloons[index % balloons.length];
-      const delay = `${(index % 4) * 0.2}s`;
-      return `<span class="balloon" style="--x:${x.toFixed(1)}%;--y:${y}px;--balloon:${color};--delay:${delay}"></span>`;
-    }).join('');
-    return `
-      <div class="crowd-strip crowd-top" aria-hidden="true">${spectators}${balloonHtml}</div>
-      <div class="crowd-strip crowd-bottom" aria-hidden="true">${spectators}</div>
-    `;
+    return '<div class="crowd-cheer" aria-hidden="true"></div>';
   }
 
   function shell(overlay) {
@@ -1063,9 +1051,9 @@
             <button id="rol-close" type="button" title="Close" aria-label="Close">X</button>
           </div>
         </header>
+        ${crowdHtml()}
         <main class="course-wrap" aria-label="LION OPS LIVE RACE course">
           <div class="course-track" id="rol-course">
-            ${crowdHtml()}
             <div class="start-line"></div>
             <div class="hour-marker marker-1"></div>
             <div class="hour-marker marker-2"></div>
@@ -1254,6 +1242,20 @@
     return totalHours > 0 ? 'Run' : 'Start';
   }
 
+  function dadJokeForHour(now) {
+    const hour = Math.floor(now.getTime() / C.dadJokeMs);
+    if (state.dadJokeHour !== hour) {
+      const previous = state.dadJokeIndex;
+      let next = Math.floor(Math.random() * DAD_JOKES.length);
+      if (DAD_JOKES.length > 1 && next === previous) {
+        next = (next + 1 + Math.floor(Math.random() * (DAD_JOKES.length - 1))) % DAD_JOKES.length;
+      }
+      state.dadJokeHour = hour;
+      state.dadJokeIndex = next;
+    }
+    return DAD_JOKES[state.dadJokeIndex] || DAD_JOKES[0];
+  }
+
   function announcerCommentary(operators, rankByLocker, hold, now) {
     if (hold) {
       return {
@@ -1271,6 +1273,9 @@
     const ranked = rankedOperators(operators);
     const leader = ranked[0];
     const bucket = Math.floor(now.getTime() / C.announcerMs);
+    if (bucket % Math.max(1, Math.round(C.dadJokeMs / C.announcerMs)) === 0) {
+      return { expression: 'laugh', text: dadJokeForHour(now) };
+    }
     const type = bucket % 9;
 
     if (type === 2 || type === 5 || type === 8) {
@@ -1361,7 +1366,6 @@
     $('rol-total-hours').textContent = totalHours.toFixed(2);
     $('rol-avg-hours').textContent = averageHours.toFixed(2);
     $('rol-course').innerHTML = `
-      ${crowdHtml()}
       <div class="start-line"></div>
       <div class="hour-marker marker-1"></div>
       <div class="hour-marker marker-2"></div>
