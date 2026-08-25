@@ -959,16 +959,16 @@
       #${C.overlayId} .hold-copy b{display:block;font-size:16px;text-transform:uppercase}#${C.overlayId} .hold-copy strong{display:block;margin-top:6px;font-size:32px;letter-spacing:.04em}
       #${C.overlayId} .final-countdown{position:absolute;inset:0;z-index:4;display:none;place-items:center;color:#facc15;font-size:92px;line-height:1;font-weight:1000;text-shadow:4px 4px 0 #111827,-2px -2px 0 #111827,0 0 18px rgba(250,204,21,.7);pointer-events:none}
       #${C.overlayId} .final-countdown.is-active{display:grid;animation:rolFinalPop .38s steps(3) both}
-      #${C.overlayId} .board{position:fixed;z-index:6;right:12px;top:40px;width:var(--rank-board-w);max-height:650px;overflow:hidden;border:2px solid rgba(15,23,42,.48);border-radius:8px;background:rgba(9,31,48,.9);color:#f8fafc;box-shadow:0 16px 30px rgba(0,0,0,.28)}
-      #${C.overlayId} .board-title{padding:10px 12px 8px;font-size:22px;line-height:1;font-weight:1000;text-transform:uppercase;letter-spacing:.08em;background:rgba(2,6,23,.45)}
+      #${C.overlayId} .board{position:fixed;z-index:6;right:12px;top:40px;width:var(--rank-board-w);max-height:calc(100vh - 50px);overflow:hidden;border:2px solid rgba(15,23,42,.48);border-radius:8px;background:rgba(9,31,48,.9);color:#f8fafc;box-shadow:0 16px 30px rgba(0,0,0,.28)}
+      #${C.overlayId} .board-title{padding:8px 12px 6px;font-size:22px;line-height:1;font-weight:1000;text-transform:uppercase;letter-spacing:.08em;background:rgba(2,6,23,.45)}
       #${C.overlayId} .board-summary{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid rgba(255,255,255,.16);border-bottom:1px solid rgba(255,255,255,.16)}
-      #${C.overlayId} .board-summary div{padding:8px 9px;text-align:center;border-right:1px solid rgba(255,255,255,.14)}
+      #${C.overlayId} .board-summary div{padding:6px 9px;text-align:center;border-right:1px solid rgba(255,255,255,.14)}
       #${C.overlayId} .board-summary div:last-child{border-right:0}
       #${C.overlayId} .board-summary b{display:block;color:#a5f3fc;font-size:11px;letter-spacing:.08em;text-transform:uppercase}#${C.overlayId} .board-summary strong{display:block;font-size:25px;line-height:1.1}
       #${C.overlayId} .board-head,#${C.overlayId} .row{display:grid;grid-template-columns:68px 54px 130px 56px 86px 86px;align-items:center}
-      #${C.overlayId} .board-head{padding:7px 10px;color:#bae6fd;background:rgba(2,6,23,.55);font-size:11px;font-weight:1000;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.14)}
-      #${C.overlayId} .rows{max-height:545px;overflow:hidden}
-      #${C.overlayId} .row{min-height:20px;padding:0 10px;border-bottom:1px solid rgba(255,255,255,.07);font-size:15px;line-height:20px;font-weight:900}
+      #${C.overlayId} .board-head{padding:5px 10px;color:#bae6fd;background:rgba(2,6,23,.55);font-size:11px;font-weight:1000;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.14)}
+      #${C.overlayId} .rows{max-height:calc(100vh - 160px);overflow:hidden}
+      #${C.overlayId} .row{min-height:19px;padding:0 10px;border-bottom:1px solid rgba(255,255,255,.07);font-size:15px;line-height:19px;font-weight:900}
       #${C.overlayId} .row:nth-child(even){background:rgba(255,255,255,.045)}
       #${C.overlayId} .row.is-finished{animation:rolFinishRow 2.4s ease both}
       #${C.overlayId} .rank{color:#fef08a}#${C.overlayId} .hours{color:#d9f99d}#${C.overlayId} .time-value{color:#c4b5fd}
