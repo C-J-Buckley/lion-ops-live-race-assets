@@ -1226,7 +1226,7 @@
     const now = new Date();
     const rows = operators
       .filter(operator => hasActivity(operator) && !operator.inactive)
-      .sort((a, b) => Number(a.locker) - Number(b.locker));
+      .sort((a, b) => (rankByLocker[a.locker] || 999) - (rankByLocker[b.locker] || 999) || Number(a.locker) - Number(b.locker));
     if (!rows.length) {
       return '<div class="row"><span style="grid-column:1/-1">Awaiting active operators.</span></div>';
     }
