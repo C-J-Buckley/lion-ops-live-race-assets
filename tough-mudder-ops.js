@@ -178,6 +178,7 @@
     timer: null,
     clockTimer: null,
     resizeTimer: null,
+    rankFireworksTimer: null,
     busy: false,
     lastPayload: null,
     previousValues: {},
@@ -885,6 +886,22 @@
     return current < previous ? ' is-rank-up' : '';
   }
 
+  function hasRankUp(operators, rankByLocker) {
+    return operators.some(operator => Boolean(rankUpClass(operator.locker, rankByLocker[operator.locker] || '--')));
+  }
+
+  function triggerRankFireworks() {
+    const overlay = $(C.overlayId);
+    if (!overlay) return;
+    overlay.classList.remove('is-rank-fireworks');
+    void overlay.offsetWidth;
+    overlay.classList.add('is-rank-fireworks');
+    clearTimeout(state.rankFireworksTimer);
+    state.rankFireworksTimer = setTimeout(() => {
+      overlay.classList.remove('is-rank-fireworks');
+    }, 5600);
+  }
+
   function rememberValues(operators, rankByLocker = {}) {
     state.previousValues = Object.fromEntries(operators.flatMap(operator => {
       const projectedText = operator.projected == null ? '--' : operator.projected.toFixed(2);
@@ -921,6 +938,7 @@
       @keyframes rolRankFireworks{0%,100%{opacity:0;transform:translateY(-50%) scale(.35) rotate(0deg)}12%,32%{opacity:1;transform:translateY(-50%) scale(1.45) rotate(12deg)}52%{opacity:.85;transform:translateY(-50%) scale(1.05) rotate(-8deg)}}
       @keyframes rolRankGlow{0%,18%{background:rgba(250,204,21,.72);box-shadow:inset 0 0 0 2px rgba(250,204,21,.95),0 0 16px rgba(250,204,21,.8)}100%{background:rgba(255,255,255,.045);box-shadow:none}}
       @keyframes rolRankNumberPop{0%,100%{transform:scale(1);filter:none}16%,48%{transform:scale(1.22);filter:drop-shadow(0 0 8px #facc15)}}
+      @keyframes rolScoreFireworkBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(.12)}10%{opacity:1;transform:translate(-50%,-50%) scale(.55)}58%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}82%{opacity:.88;transform:translate(-50%,-50%) scale(1.24)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.36)}}
       @keyframes rolCrowdCheer{
         0%,12.49%{background-position:0 0}
         12.5%,24.99%{background-position:-82px 0}
@@ -1002,6 +1020,21 @@
       #${C.overlayId} .row.is-rank-up .rank{display:inline-block;color:#fff7ad;text-shadow:0 0 6px #facc15,2px 2px 0 #020617;animation:rolRankNumberPop 1.8s steps(2) 2}
       #${C.overlayId} .rank{color:#fef08a}#${C.overlayId} .hours{color:#d9f99d}#${C.overlayId} .time-value{color:#c4b5fd}
       #${C.overlayId} .changed{animation:rolChanged .7s ease}
+      #${C.overlayId} .rank-fireworks-layer{position:fixed;right:var(--right-rail-right);top:calc(76px + var(--announcer-size));z-index:8;width:var(--rank-board-w);height:calc(100vh - var(--announcer-size) - 86px);overflow:visible;pointer-events:none}
+      #${C.overlayId} .score-firework{position:absolute;left:var(--fw-left);top:var(--fw-top);width:12px;height:12px;border-radius:999px;opacity:0;background:radial-gradient(circle,#fff 0 26%,var(--fw-a) 27% 58%,transparent 68%);box-shadow:0 0 20px var(--fw-a),0 0 38px rgba(255,255,255,.58);filter:drop-shadow(0 0 10px var(--fw-a)) drop-shadow(0 0 18px rgba(255,255,255,.55));transform:translate(-50%,-50%) scale(.2)}
+      #${C.overlayId} .score-firework:before,#${C.overlayId} .score-firework:after{content:"";position:absolute;left:50%;top:50%;width:7px;height:7px;border-radius:999px;background:var(--fw-a);box-shadow:0 -58px 0 var(--fw-a),41px -41px 0 var(--fw-b),58px 0 0 var(--fw-c),41px 41px 0 var(--fw-a),0 58px 0 var(--fw-b),-41px 41px 0 var(--fw-c),-58px 0 0 var(--fw-a),-41px -41px 0 var(--fw-b),22px -54px 0 #fff,-22px 54px 0 #fff;filter:drop-shadow(0 0 8px rgba(255,255,255,.75));transform:translate(-50%,-50%)}
+      #${C.overlayId} .score-firework:after{width:5px;height:5px;box-shadow:0 -36px 0 var(--fw-c),25px -25px 0 var(--fw-a),36px 0 0 var(--fw-b),25px 25px 0 var(--fw-c),0 36px 0 var(--fw-a),-25px 25px 0 var(--fw-b),-36px 0 0 var(--fw-c),-25px -25px 0 var(--fw-a),13px -34px 0 #fff,-13px 34px 0 #fff;transform:translate(-50%,-50%) rotate(22deg)}
+      #${C.overlayId}.is-rank-fireworks .score-firework{animation:rolScoreFireworkBurst 2.2s ease-out forwards;animation-delay:var(--fw-delay)}
+      #${C.overlayId} .score-firework-a{--fw-left:12%;--fw-top:18%;--fw-delay:0s;--fw-a:#fde047;--fw-b:#f472b6;--fw-c:#38bdf8}
+      #${C.overlayId} .score-firework-b{--fw-left:78%;--fw-top:22%;--fw-delay:.34s;--fw-a:#fb7185;--fw-b:#a7f3d0;--fw-c:#facc15}
+      #${C.overlayId} .score-firework-c{--fw-left:42%;--fw-top:32%;--fw-delay:.68s;--fw-a:#93c5fd;--fw-b:#fef3c7;--fw-c:#f97316}
+      #${C.overlayId} .score-firework-d{--fw-left:18%;--fw-top:47%;--fw-delay:1.02s;--fw-a:#86efac;--fw-b:#f9a8d4;--fw-c:#fde047}
+      #${C.overlayId} .score-firework-e{--fw-left:88%;--fw-top:49%;--fw-delay:1.36s;--fw-a:#c084fc;--fw-b:#fef08a;--fw-c:#67e8f9}
+      #${C.overlayId} .score-firework-f{--fw-left:54%;--fw-top:61%;--fw-delay:1.7s;--fw-a:#f97316;--fw-b:#bef264;--fw-c:#f9a8d4}
+      #${C.overlayId} .score-firework-g{--fw-left:26%;--fw-top:73%;--fw-delay:2.04s;--fw-a:#67e8f9;--fw-b:#fef08a;--fw-c:#fb7185}
+      #${C.overlayId} .score-firework-h{--fw-left:80%;--fw-top:78%;--fw-delay:2.38s;--fw-a:#bef264;--fw-b:#c084fc;--fw-c:#f97316}
+      #${C.overlayId} .score-firework-i{--fw-left:48%;--fw-top:88%;--fw-delay:2.72s;--fw-a:#f9a8d4;--fw-b:#38bdf8;--fw-c:#fde047}
+      #${C.overlayId} .score-firework-j{--fw-left:8%;--fw-top:88%;--fw-delay:3.06s;--fw-a:#fef08a;--fw-b:#fb7185;--fw-c:#86efac}
       #${C.overlayId} .announcer-panel{position:fixed;right:calc(var(--right-rail-right) + ((var(--rank-board-w) - var(--announcer-size)) / 2));top:48px;z-index:7;width:var(--announcer-size);height:var(--announcer-size);border-radius:50%;overflow:hidden;background:radial-gradient(circle at 42% 28%,rgba(23,59,120,.75) 0,rgba(7,26,58,.75) 58%,rgba(3,11,29,.75) 100%);border:4px solid rgba(191,219,254,.72);box-shadow:0 16px 26px rgba(0,0,0,.42),0 5px 0 rgba(2,6,23,.34),0 0 18px rgba(59,130,246,.24),inset 0 0 0 4px rgba(255,255,255,.07);animation:rolAnnouncerPop .45s ease both}
       #${C.overlayId} .announcer-panel:before{content:"";position:absolute;inset:7px;border-radius:50%;border:1px solid rgba(147,197,253,.34);pointer-events:none}
       #${C.overlayId} .announcer-bubble{position:absolute;left:11%;top:calc(10% + 5px);z-index:3;width:78%;min-height:24%;padding:8px 10px;border:2px solid #071a3a;border-radius:17px;background:#f8fbff;color:#071a3a;font-size:clamp(9px,calc(var(--announcer-size) * .045),13px);line-height:1.06;font-weight:1000;text-align:center;text-transform:none;letter-spacing:.01em;box-shadow:0 4px 0 rgba(2,6,23,.28);animation:rolBubblePop .36s ease both}
@@ -1032,6 +1065,7 @@
     clearInterval(state.timer);
     clearInterval(state.clockTimer);
     clearTimeout(state.resizeTimer);
+    clearTimeout(state.rankFireworksTimer);
     document.getElementById(C.styleId)?.remove();
     document.getElementById(C.overlayId)?.remove();
     window.removeEventListener('resize', resized);
@@ -1068,6 +1102,12 @@
     return Array.from({ length: 18 }, (_, index) => {
       return `<span class="crowd-cell" style="--x:${index * 76}px;--delay:${(index % 4) * -0.08}s"></span>`;
     }).join('');
+  }
+
+  function scoreFireworksHtml() {
+    return 'abcdefghij'.split('').map(letter => (
+      `<span class="score-firework score-firework-${letter}"></span>`
+    )).join('');
   }
 
   function shell(overlay) {
@@ -1123,6 +1163,7 @@
           </div>
           <div class="rows" id="rol-rows"></div>
         </section>
+        <div class="rank-fireworks-layer" aria-hidden="true">${scoreFireworksHtml()}</div>
         <aside class="announcer-panel" aria-label="TV announcer commentary">
           <div class="announcer-bubble" id="rol-announcer-text">Race desk standing by.</div>
           <div class="announcer-figure" id="rol-announcer-figure" data-expression="thinking" aria-hidden="true"></div>
@@ -1407,6 +1448,7 @@
       ${courseHtml(activeOperators)}
     `;
     $('rol-rows').innerHTML = rowsHtml(activeOperators, ranks);
+    if (hasRankUp(activeOperators, ranks)) triggerRankFireworks();
     updateAnnouncer(activeOperators, ranks, hold, now);
     if (hold) {
       $('rol-course-hold').style.setProperty('--watch-angle', `${stopwatchAngle(hold).toFixed(2)}deg`);
