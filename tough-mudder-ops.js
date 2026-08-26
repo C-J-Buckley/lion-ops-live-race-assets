@@ -918,8 +918,9 @@
       @keyframes rolFinishFlash{0%,100%{filter:none}18%,42%{filter:brightness(1.6) drop-shadow(0 0 12px #facc15)}}
       @keyframes rolFinishRow{0%{background:rgba(250,204,21,.46)}100%{background:transparent}}
       @keyframes rolConfetti{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--confetti-x),var(--confetti-y)) scale(.3)}}
-      @keyframes rolRankFireworks{0%,100%{opacity:0;transform:scale(.75)}18%,52%{opacity:1;transform:scale(1.12)}}
-      @keyframes rolRankGlow{0%{background:rgba(250,204,21,.42)}100%{background:rgba(255,255,255,.045)}}
+      @keyframes rolRankFireworks{0%,100%{opacity:0;transform:translateY(-50%) scale(.35) rotate(0deg)}12%,32%{opacity:1;transform:translateY(-50%) scale(1.45) rotate(12deg)}52%{opacity:.85;transform:translateY(-50%) scale(1.05) rotate(-8deg)}}
+      @keyframes rolRankGlow{0%,18%{background:rgba(250,204,21,.72);box-shadow:inset 0 0 0 2px rgba(250,204,21,.95),0 0 16px rgba(250,204,21,.8)}100%{background:rgba(255,255,255,.045);box-shadow:none}}
+      @keyframes rolRankNumberPop{0%,100%{transform:scale(1);filter:none}16%,48%{transform:scale(1.22);filter:drop-shadow(0 0 8px #facc15)}}
       @keyframes rolCrowdCheer{
         0%,12.49%{background-position:0 0}
         12.5%,24.99%{background-position:-82px 0}
@@ -994,10 +995,11 @@
       #${C.overlayId} .row{position:relative;min-height:19px;padding:0 10px;border-bottom:1px solid rgba(255,255,255,.07);font-size:15px;line-height:19px;font-weight:900}
       #${C.overlayId} .row:nth-child(even){background:rgba(255,255,255,.045)}
       #${C.overlayId} .row.is-finished{animation:rolFinishRow 2.4s ease both}
-      #${C.overlayId} .row.is-rank-up{animation:rolRankGlow 2.8s ease both}
-      #${C.overlayId} .row.is-rank-up:before,#${C.overlayId} .row.is-rank-up:after{content:"";position:absolute;z-index:1;top:50%;width:5px;height:5px;background:#facc15;box-shadow:8px -7px #38bdf8,13px 5px #fb7185,21px -3px #a3e635,27px 7px #f97316;animation:rolRankFireworks 1.2s steps(2) 2;pointer-events:none}
-      #${C.overlayId} .row.is-rank-up:before{left:4px}
-      #${C.overlayId} .row.is-rank-up:after{right:32px;transform:scaleX(-1)}
+      #${C.overlayId} .row.is-rank-up{animation:rolRankGlow 3.6s ease both}
+      #${C.overlayId} .row.is-rank-up:before,#${C.overlayId} .row.is-rank-up:after{content:"";position:absolute;z-index:1;top:50%;width:7px;height:7px;background:#facc15;box-shadow:10px -10px #38bdf8,18px 7px #fb7185,30px -4px #a3e635,42px 9px #f97316,54px -8px #e879f9,66px 4px #fef08a;animation:rolRankFireworks 1.8s steps(3) 2;pointer-events:none}
+      #${C.overlayId} .row.is-rank-up:before{left:6px}
+      #${C.overlayId} .row.is-rank-up:after{right:78px}
+      #${C.overlayId} .row.is-rank-up .rank{display:inline-block;color:#fff7ad;text-shadow:0 0 6px #facc15,2px 2px 0 #020617;animation:rolRankNumberPop 1.8s steps(2) 2}
       #${C.overlayId} .rank{color:#fef08a}#${C.overlayId} .hours{color:#d9f99d}#${C.overlayId} .time-value{color:#c4b5fd}
       #${C.overlayId} .changed{animation:rolChanged .7s ease}
       #${C.overlayId} .announcer-panel{position:fixed;right:calc(var(--right-rail-right) + ((var(--rank-board-w) - var(--announcer-size)) / 2));top:48px;z-index:7;width:var(--announcer-size);height:var(--announcer-size);border-radius:50%;overflow:hidden;background:radial-gradient(circle at 42% 28%,rgba(23,59,120,.75) 0,rgba(7,26,58,.75) 58%,rgba(3,11,29,.75) 100%);border:4px solid rgba(191,219,254,.72);box-shadow:0 16px 26px rgba(0,0,0,.42),0 5px 0 rgba(2,6,23,.34),0 0 18px rgba(59,130,246,.24),inset 0 0 0 4px rgba(255,255,255,.07);animation:rolAnnouncerPop .45s ease both}
@@ -1063,7 +1065,7 @@
   }
 
   function crowdHtml() {
-    return Array.from({ length: 28 }, (_, index) => {
+    return Array.from({ length: 18 }, (_, index) => {
       return `<span class="crowd-cell" style="--x:${index * 76}px;--delay:${(index % 4) * -0.08}s"></span>`;
     }).join('');
   }
