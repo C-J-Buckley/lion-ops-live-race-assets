@@ -922,13 +922,13 @@
       @keyframes rolRankGlow{0%{background:rgba(250,204,21,.42)}100%{background:rgba(255,255,255,.045)}}
       @keyframes rolCrowdCheer{
         0%,12.49%{background-position:0 0}
-        12.5%,24.99%{background-position:-156px 0}
-        25%,37.49%{background-position:-312px 0}
-        37.5%,49.99%{background-position:-468px 0}
-        50%,62.49%{background-position:0 -156px}
-        62.5%,74.99%{background-position:-156px -156px}
-        75%,87.49%{background-position:-312px -156px}
-        87.5%,100%{background-position:-468px -156px}
+        12.5%,24.99%{background-position:-82px 0}
+        25%,37.49%{background-position:-164px 0}
+        37.5%,49.99%{background-position:-246px 0}
+        50%,62.49%{background-position:0 -82px}
+        62.5%,74.99%{background-position:-82px -82px}
+        75%,87.49%{background-position:-164px -82px}
+        87.5%,100%{background-position:-246px -82px}
       }
       #${C.overlayId}{--rank-board-w:520px;--course-board-gap:100px;--announcer-size:clamp(180px,23vh,255px);--right-rail-right:12px;position:fixed;inset:0;z-index:2147483647;overflow:hidden;color:#12304a;background:#83b80d url("${C.grassBackgroundUrl}") 0 0/220px 220px repeat;image-rendering:pixelated;image-rendering:crisp-edges;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;animation:rolFade .16s ease}
       #${C.overlayId} *{box-sizing:border-box}
@@ -941,8 +941,8 @@
       #${C.overlayId} .title{font-size:clamp(24px,2.7vw,42px);line-height:.9;font-weight:1000;letter-spacing:.01em;text-transform:uppercase}
       #${C.overlayId} .crew{display:block;margin-top:4px;font-size:10px;font-weight:1000;letter-spacing:.16em}
       #${C.overlayId} .controls{position:fixed;right:6px;top:5px;z-index:9;display:flex;width:var(--rank-board-w);justify-content:flex-end;gap:2px}
-      #${C.overlayId} .crowd-cheer{--course-area-w:calc(100vw - var(--rank-board-w) - var(--course-board-gap) - 12px);--course-w:calc((var(--course-area-w) - ${C.startLineWidthPx + C.finishLineWidthPx + C.courseGapPx * 4}px) / 3);position:fixed;z-index:7;left:calc(${C.startLineWidthPx + C.courseGapPx * 2}px + var(--course-w));top:2px;width:calc((var(--course-w) * 2) + ${C.courseGapPx}px);height:80px;overflow:hidden;background:transparent;pointer-events:none}
-      #${C.overlayId} .crowd-cell{position:absolute;left:var(--x);bottom:0;width:156px;height:106px;background-image:url("${C.crowdCheerUrl}");background-repeat:no-repeat;background-size:624px 312px;background-position:0 0;image-rendering:auto;filter:drop-shadow(0 2px 0 rgba(15,23,42,.32));animation:rolCrowdCheer .9s step-end infinite;animation-delay:var(--delay)}
+      #${C.overlayId} .crowd-cheer{--course-area-w:calc(100vw - var(--rank-board-w) - var(--course-board-gap) - 12px);--course-w:calc((var(--course-area-w) - ${C.startLineWidthPx + C.finishLineWidthPx + C.courseGapPx * 4}px) / 3);position:fixed;z-index:7;left:calc(${C.startLineWidthPx + C.courseGapPx * 2}px + var(--course-w));top:0;width:calc((var(--course-w) * 2) + ${C.courseGapPx}px);height:82px;overflow:hidden;background:transparent;pointer-events:none}
+      #${C.overlayId} .crowd-cell{position:absolute;left:var(--x);bottom:0;width:82px;height:82px;background-image:url("${C.crowdCheerUrl}");background-repeat:no-repeat;background-size:328px 164px;background-position:0 0;image-rendering:auto;filter:drop-shadow(0 2px 0 rgba(15,23,42,.32));animation:rolCrowdCheer .9s step-end infinite;animation-delay:var(--delay)}
       #${C.overlayId} .course-wrap{position:absolute;left:0;right:calc(var(--rank-board-w) + var(--course-board-gap) + 12px);top:82px;bottom:10px;overflow:hidden;border:0;border-radius:0;background:#83b80d url("${C.grassBackgroundUrl}") 0 0/220px 220px repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
       #${C.overlayId} .course-track{--course-gap:${C.courseGapPx}px;--start-line-w:${C.startLineWidthPx}px;--finish-line-w:${C.finishLineWidthPx}px;--runner-size:clamp(31px,3.9vh,49px);--course-start:calc(var(--start-line-w) + var(--course-gap));--course-w:calc((100% - var(--start-line-w) - var(--finish-line-w) - (var(--course-gap) * 4)) / 3);position:absolute;left:0;right:0;top:0;bottom:12px;overflow:hidden;border-radius:0;background:#83b80d;background-image:linear-gradient(rgba(31,91,24,.18),rgba(31,91,24,.18)),url("${C.grassBackgroundUrl}");background-position:0 0,0 0;background-size:100% 100%,220px 220px;background-repeat:no-repeat,repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
       #${C.overlayId} .segment{position:absolute;z-index:1;top:0;bottom:0;border-left:0;border-right:0}
@@ -1063,8 +1063,8 @@
   }
 
   function crowdHtml() {
-    return Array.from({ length: 18 }, (_, index) => {
-      return `<span class="crowd-cell" style="--x:${index * 136}px;--delay:${(index % 4) * -0.08}s"></span>`;
+    return Array.from({ length: 28 }, (_, index) => {
+      return `<span class="crowd-cell" style="--x:${index * 76}px;--delay:${(index % 4) * -0.08}s"></span>`;
     }).join('');
   }
 
