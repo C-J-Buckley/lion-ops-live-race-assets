@@ -80,7 +80,7 @@
     ['Oscar Duran', '23'],
     ['William Robinson III', '24'],
     ['Matthew Nguyen', '25'],
-    ['Mark Amirkan', '26'],
+    ['Mark Amirkhan', '26'],
     ['Kelvin Chung', '27'],
     ['Annalie Janelle', '28'],
     ['Edison Isaias Barrientos', '29'],
