@@ -23,6 +23,7 @@
     electricGroundUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/ElectricGround.png',
     thunderTextureUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Thunder_Transparent.gif',
     barbedWireUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/BarbedWire.png',
+    crowdCheerUrl: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Crowd-Cheer.png',
     commentatorUrls: {
       excited: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Commentator_Excited.png',
       thinking: 'https://c-j-buckley.github.io/lion-ops-live-race-assets/Assets/Commentator_thinking.png',
@@ -910,6 +911,16 @@
       @keyframes rolFinishFlash{0%,100%{filter:none}18%,42%{filter:brightness(1.6) drop-shadow(0 0 12px #facc15)}}
       @keyframes rolFinishRow{0%{background:rgba(250,204,21,.46)}100%{background:transparent}}
       @keyframes rolConfetti{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--confetti-x),var(--confetti-y)) scale(.3)}}
+      @keyframes rolCrowdCheer{
+        0%,12.49%{background-position:0 0}
+        12.5%,24.99%{background-position:-130px 0}
+        25%,37.49%{background-position:-260px 0}
+        37.5%,49.99%{background-position:-390px 0}
+        50%,62.49%{background-position:0 -130px}
+        62.5%,74.99%{background-position:-130px -130px}
+        75%,87.49%{background-position:-260px -130px}
+        87.5%,100%{background-position:-390px -130px}
+      }
       #${C.overlayId}{--rank-board-w:520px;--course-board-gap:100px;position:fixed;inset:0;z-index:2147483647;overflow:hidden;color:#12304a;background:#83b80d url("${C.grassBackgroundUrl}") 0 0/220px 220px repeat;image-rendering:pixelated;image-rendering:crisp-edges;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;animation:rolFade .16s ease}
       #${C.overlayId} *{box-sizing:border-box}
       #${C.overlayId} button{min-width:42px;height:9px;border:1px solid rgba(12,45,72,.34);border-radius:3px;padding:0 8px;color:#072033;background:rgba(255,255,255,.78);font:inherit;font-size:6px;line-height:7px;font-weight:1000;letter-spacing:.05em;text-transform:uppercase;cursor:pointer}
@@ -921,6 +932,8 @@
       #${C.overlayId} .title{font-size:clamp(24px,2.7vw,42px);line-height:.9;font-weight:1000;letter-spacing:.01em;text-transform:uppercase}
       #${C.overlayId} .crew{display:block;margin-top:4px;font-size:10px;font-weight:1000;letter-spacing:.16em}
       #${C.overlayId} .controls{position:fixed;right:6px;top:5px;z-index:9;display:flex;width:var(--rank-board-w);justify-content:flex-end;gap:2px}
+      #${C.overlayId} .crowd-cheer{--course-area-w:calc(100vw - var(--rank-board-w) - var(--course-board-gap) - 12px);--course-w:calc((var(--course-area-w) - ${C.startLineWidthPx + C.finishLineWidthPx + C.courseGapPx * 4}px) / 3);position:fixed;z-index:4;left:calc(${C.startLineWidthPx + C.courseGapPx * 2}px + var(--course-w));top:6px;width:calc((var(--course-w) * 2) + ${C.courseGapPx}px);height:72px;overflow:hidden;background:transparent;pointer-events:none}
+      #${C.overlayId} .crowd-cell{position:absolute;left:var(--x);bottom:0;width:130px;height:72px;background-image:url("${C.crowdCheerUrl}");background-repeat:no-repeat;background-size:520px 260px;background-position:0 0;image-rendering:auto;filter:drop-shadow(0 2px 0 rgba(15,23,42,.24));animation:rolCrowdCheer .9s step-end infinite;animation-delay:var(--delay)}
       #${C.overlayId} .course-wrap{position:absolute;left:0;right:calc(var(--rank-board-w) + var(--course-board-gap) + 12px);top:82px;bottom:10px;overflow:hidden;border:0;border-radius:0;background:#83b80d url("${C.grassBackgroundUrl}") 0 0/220px 220px repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
       #${C.overlayId} .course-track{--course-gap:${C.courseGapPx}px;--start-line-w:${C.startLineWidthPx}px;--finish-line-w:${C.finishLineWidthPx}px;--runner-size:clamp(31px,3.9vh,49px);--course-start:calc(var(--start-line-w) + var(--course-gap));--course-w:calc((100% - var(--start-line-w) - var(--finish-line-w) - (var(--course-gap) * 4)) / 3);position:absolute;left:0;right:0;top:0;bottom:12px;overflow:hidden;border-radius:0;background:#83b80d;background-image:linear-gradient(rgba(31,91,24,.18),rgba(31,91,24,.18)),url("${C.grassBackgroundUrl}");background-position:0 0,0 0;background-size:100% 100%,220px 220px;background-repeat:no-repeat,repeat;image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:none}
       #${C.overlayId} .segment{position:absolute;z-index:1;top:0;bottom:0;border-left:0;border-right:0}
@@ -1035,6 +1048,12 @@
     )).join('');
   }
 
+  function crowdHtml() {
+    return Array.from({ length: 18 }, (_, index) => {
+      return `<span class="crowd-cell" style="--x:${index * 112}px;--delay:${(index % 4) * -0.08}s"></span>`;
+    }).join('');
+  }
+
   function shell(overlay) {
     overlay.innerHTML = `
       <div class="shell">
@@ -1045,6 +1064,7 @@
             <button id="rol-close" type="button" title="Close" aria-label="Close">X</button>
           </div>
         </header>
+        <div class="crowd-cheer" aria-hidden="true">${crowdHtml()}</div>
         <main class="course-wrap" aria-label="LION OPS LIVE RACE course">
           <div class="course-track" id="rol-course">
             <div class="start-line"></div>
