@@ -80,7 +80,7 @@
     ['Jadrien Malakai Lopez', '22'],
     ['Oscar Duran', '23'],
     ['William Robinson III', '24'],
-    ['Matthew Nguyen', '25'],
+    ['Andrew Flores', '25'],
     ['Mark Amirkhan', '26'],
     ['Kelvin Chung', '27'],
     ['Annalie Janelle', '28'],
