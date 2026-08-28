@@ -467,7 +467,6 @@
     if (saturation < 0.18) return null;
     if (hue >= 30 && hue <= 58) return 'away';
     if (hue >= 130 && hue <= 185) return lightness >= 0.55 ? 'setup' : 'operating';
-    if (hue > 185 && hue <= 215) return 'setup';
     return null;
   }
 
