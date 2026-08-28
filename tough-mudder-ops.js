@@ -520,6 +520,43 @@
     return `${minutes}m`;
   }
 
+  function metricHoursFromText(value) {
+    const parsed = parseMetricValue(value);
+    return parsed !== null && Number.isFinite(parsed) ? parsed : null;
+  }
+
+  function textSources(element) {
+    return [
+      element?.getAttribute?.('aria-label'),
+      element?.getAttribute?.('title'),
+      element?.getAttribute?.('data-value'),
+      element?.getAttribute?.('data-label'),
+      element?.getAttribute?.('data-tooltip'),
+      element?.textContent
+    ].filter(Boolean);
+  }
+
+  function categoryHoursFromText(text, labels) {
+    const normalized = String(text || '').replace(/\s+/g, ' ').trim();
+    if (!normalized) return null;
+    for (const label of labels) {
+      const escaped = String(label).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const after = normalized.match(new RegExp(`${escaped}[^\\d]{0,40}(\\d+(?:\\.\\d+)?)\\s*([hms])\\b`, 'i'));
+      if (after) return metricHoursFromText(`${after[1]}${after[2]}`);
+      const before = normalized.match(new RegExp(`(\\d+(?:\\.\\d+)?)\\s*([hms])\\b[^a-z0-9]{0,40}${escaped}`, 'i'));
+      if (before) return metricHoursFromText(`${before[1]}${before[2]}`);
+    }
+    return null;
+  }
+
+  function categoryHoursFromElement(element, labels) {
+    for (const text of textSources(element)) {
+      const parsed = categoryHoursFromText(text, labels);
+      if (parsed !== null) return parsed;
+    }
+    return null;
+  }
+
   function rgbFromCss(value) {
     const text = String(value || '').trim();
     if (!text || text === 'none' || text === 'transparent') return null;
@@ -656,6 +693,8 @@
           rect,
           segments: [],
           coloredWidth: rect.width,
+          awayHours: categoryHoursFromElement(element, ['away']),
+          setupHours: categoryHoursFromElement(element, ['setup', 'setup / blocked', 'blocked']),
           ...gradientRatios
         };
       }
@@ -666,7 +705,13 @@
         const role = periodRoleFromColor(colorValue);
         const color = rgbFromCss(colorValue);
         if (!color && childRect.width < 3) return null;
-        return { role, width: childRect.width, left: childRect.left };
+        return {
+          role,
+          width: childRect.width,
+          left: childRect.left,
+          awayHours: categoryHoursFromElement(child, ['away']),
+          setupHours: categoryHoursFromElement(child, ['setup', 'setup / blocked', 'blocked'])
+        };
       }).filter(Boolean);
       const descendantSegments = segments.length ? [] : [...element.querySelectorAll('*')].map(child => {
         const childRect = child.getBoundingClientRect();
@@ -678,12 +723,25 @@
         const tag = String(child.tagName || '').toLowerCase();
         const likelySegment = ['rect', 'path', 'div', 'span'].includes(tag) && childRect.width >= 3;
         if (!color && !likelySegment) return null;
-        return { role, width: childRect.width, left: childRect.left };
+        return {
+          role,
+          width: childRect.width,
+          left: childRect.left,
+          awayHours: categoryHoursFromElement(child, ['away']),
+          setupHours: categoryHoursFromElement(child, ['setup', 'setup / blocked', 'blocked'])
+        };
       }).filter(Boolean);
       const allSegments = applyPeriodSegmentFallback((segments.length ? segments : descendantSegments).sort((a, b) => a.left - b.left));
       const coloredWidth = allSegments.reduce((sum, segment) => sum + segment.width, 0);
       if (allSegments.length < 1 || coloredWidth < 8 || !allSegments.some(segment => segment.role)) return null;
-      return { element, rect, segments: allSegments, coloredWidth: Math.max(rect.width, coloredWidth) };
+      return {
+        element,
+        rect,
+        segments: allSegments,
+        coloredWidth: Math.max(rect.width, coloredWidth),
+        awayHours: categoryHoursFromElement(element, ['away']) ?? allSegments.find(segment => segment.awayHours !== null)?.awayHours ?? null,
+        setupHours: categoryHoursFromElement(element, ['setup', 'setup / blocked', 'blocked']) ?? allSegments.find(segment => segment.setupHours !== null)?.setupHours ?? null
+      };
     }).filter(Boolean);
     const candidate = candidates.sort((a, b) => b.coloredWidth - a.coloredWidth)[0];
     if (!candidate) return null;
@@ -692,6 +750,8 @@
         awayRatio: candidate.awayRatio || 0,
         setupRatio: candidate.setupRatio || 0,
         operatingRatio: candidate.operatingRatio || 0,
+        awayHours: candidate.awayHours,
+        setupHours: candidate.setupHours,
         latestHours: latestHoursFromRow(row)
       };
     }
@@ -708,6 +768,8 @@
       awayRatio: awayWidth / candidate.coloredWidth,
       setupRatio: setupWidth / candidate.coloredWidth,
       operatingRatio: operatingWidth / candidate.coloredWidth,
+      awayHours: candidate.awayHours,
+      setupHours: candidate.setupHours,
       latestHours: latestHoursFromRow(row)
     };
   }
@@ -737,11 +799,17 @@
     seenCounts[key] = index + 1;
     const mix = list[Math.min(index, list.length - 1)];
     const operatingHours = Number.isFinite(mix.latestHours) && mix.latestHours > 0 ? mix.latestHours : totalHours;
+    if (mix.awayHours !== null || mix.setupHours !== null) {
+      return {
+        away: mix.awayHours,
+        setup: mix.setupHours
+      };
+    }
     if (!Number.isFinite(operatingHours) || operatingHours <= 0) return null;
     const observedHours = mix.operatingRatio > 0 ? operatingHours / mix.operatingRatio : operatingHours;
     return {
-      away: mix.awayRatio > 0 ? observedHours * mix.awayRatio : null,
-      setup: mix.setupRatio > 0 ? observedHours * mix.setupRatio : null
+      away: mix.awayHours ?? (mix.awayRatio > 0 ? observedHours * mix.awayRatio : null),
+      setup: mix.setupHours ?? (mix.setupRatio > 0 ? observedHours * mix.setupRatio : null)
     };
   }
 
