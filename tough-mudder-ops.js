@@ -805,14 +805,16 @@
         const name = operatorName(operator);
         const total = operatorHours(operator);
         const pagePeriodMix = pagePeriodMixForOperator(name, pageMix, pageMixCounts, total);
+        const directAway = awayTime(operator);
+        const directSetup = setupTime(operator);
         return {
           name,
           locker: labelFor(name, labelCounts),
           total,
           projected: projected(total, timestamp),
           sessions: sessions(operator),
-          away: pagePeriodMix?.away ?? awayTime(operator),
-          setup: pagePeriodMix?.setup ?? setupTime(operator)
+          away: directAway ?? pagePeriodMix?.away,
+          setup: directSetup ?? pagePeriodMix?.setup
         };
       })
       .filter(operator => operator.locker !== '--')
