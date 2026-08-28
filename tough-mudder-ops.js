@@ -216,6 +216,30 @@
     ).trim().replace(/\s+/g, ' ');
   }
 
+  function operatorLocker(operator) {
+    const value = operator?.locker ??
+      operator?.Locker ??
+      operator?.lockerNumber ??
+      operator?.LockerNumber ??
+      operator?.locker_number ??
+      operator?.['Locker Number'] ??
+      operator?.station ??
+      operator?.Station ??
+      operator?.stationNumber ??
+      operator?.StationNumber ??
+      operator?.station_number ??
+      operator?.['Station Number'] ??
+      operator?.stationId ??
+      operator?.StationId ??
+      operator?.station_id ??
+      operator?.['Station ID'];
+    const match = String(value ?? '').match(/\d+/);
+    if (!match) return null;
+    const locker = Number(match[0]);
+    if (!Number.isFinite(locker) || locker < 1 || locker > C.maxLockerNumber) return null;
+    return String(locker);
+  }
+
   function sessions(operator) {
     return num(
       operator.sessions ??
@@ -240,9 +264,22 @@
     );
   }
 
-  function parseMetricValue(value) {
+  function unitFromMetricKey(key) {
+    const text = String(key || '').toLowerCase();
+    if (text.includes('second')) return 'seconds';
+    if (text.includes('minute') || /\bmins?\b/.test(text)) return 'minutes';
+    if (text.includes('hour') || /\bhrs?\b/.test(text)) return 'hours';
+    return null;
+  }
+
+  function parseMetricValue(value, unitHint = null) {
     if (value === undefined || value === null || value === '') return null;
-    if (typeof value === 'number') return Number.isFinite(value) ? value : null;
+    if (typeof value === 'number') {
+      if (!Number.isFinite(value)) return null;
+      if (unitHint === 'minutes') return value / 60;
+      if (unitHint === 'seconds') return value / 3600;
+      return value;
+    }
     if (typeof value === 'object') {
       return firstMetric(value, ['value', 'Value', 'hours', 'Hours', 'time', 'Time', 'duration', 'Duration', 'total', 'Total', 'minutes', 'Minutes', 'seconds', 'Seconds']);
     }
@@ -268,7 +305,7 @@
   function firstMetric(operator, keys) {
     for (const key of keys) {
       const value = operator[key];
-      const parsed = parseMetricValue(value);
+      const parsed = parseMetricValue(value, unitFromMetricKey(key));
       if (parsed !== null) return parsed;
     }
     return null;
@@ -323,7 +360,7 @@
       if (Array.isArray(source)) {
         for (const entry of source) {
           if (includesAny(entryName(entry), needles)) {
-            const parsed = firstMetric(entry, ['value', 'Value', 'hours', 'Hours', 'time', 'Time', 'duration', 'Duration', 'total', 'Total', 'minutes', 'Minutes', 'seconds', 'Seconds']);
+            const parsed = firstMetric(entry, ['hours', 'Hours', 'timeHours', 'TimeHours', 'durationHours', 'DurationHours', 'valueHours', 'ValueHours', 'minutes', 'Minutes', 'timeMinutes', 'TimeMinutes', 'durationMinutes', 'DurationMinutes', 'valueMinutes', 'ValueMinutes', 'seconds', 'Seconds', 'timeSeconds', 'TimeSeconds', 'durationSeconds', 'DurationSeconds', 'valueSeconds', 'ValueSeconds', 'value', 'Value', 'time', 'Time', 'duration', 'Duration', 'total', 'Total']);
             if (parsed !== null) return parsed;
           }
         }
@@ -332,7 +369,7 @@
       if (source && typeof source === 'object') {
         for (const [key, value] of Object.entries(source)) {
           if (includesAny(key, needles) || includesAny(entryName(value), needles)) {
-            const parsed = parseMetricValue(value);
+            const parsed = parseMetricValue(value, unitFromMetricKey(key));
             if (parsed !== null) return parsed;
           }
         }
@@ -353,6 +390,19 @@
       'AwayHours',
       'Away_Hours',
       'Away Hours',
+      'awayMinutes',
+      'away_minutes',
+      'AwayMinutes',
+      'Away_Minutes',
+      'Away Minutes',
+      'totalAwayMinutes',
+      'total_away_minutes',
+      'TotalAwayMinutes',
+      'Total Away Minutes',
+      'awaySeconds',
+      'away_seconds',
+      'AwaySeconds',
+      'Away Seconds',
       'totalAway',
       'total_away',
       'TotalAway',
@@ -398,6 +448,30 @@
       'SetUpHours',
       'Setup Hours',
       'Set Up Hours',
+      'setupMinutes',
+      'setup_minutes',
+      'setUpMinutes',
+      'set_up_minutes',
+      'SetupMinutes',
+      'SetUpMinutes',
+      'Setup Minutes',
+      'Set Up Minutes',
+      'blockMinutes',
+      'block_minutes',
+      'BlockMinutes',
+      'Block Minutes',
+      'setupSeconds',
+      'setup_seconds',
+      'setUpSeconds',
+      'set_up_seconds',
+      'SetupSeconds',
+      'SetUpSeconds',
+      'Setup Seconds',
+      'Set Up Seconds',
+      'blockSeconds',
+      'block_seconds',
+      'BlockSeconds',
+      'Block Seconds',
       'setup',
       'Setup',
       'setUp',
@@ -807,9 +881,10 @@
         const pagePeriodMix = pagePeriodMixForOperator(name, pageMix, pageMixCounts, total);
         const directAway = awayTime(operator);
         const directSetup = setupTime(operator);
+        const locker = operatorLocker(operator) ?? labelFor(name, labelCounts);
         return {
           name,
-          locker: labelFor(name, labelCounts),
+          locker,
           total,
           projected: projected(total, timestamp),
           sessions: sessions(operator),
