@@ -342,13 +342,7 @@
   }
 
   function awayTime(operator) {
-    return periodMixMetric(operator, ['cyan'], ['away']) ?? firstMetric(operator, [
-      'periodMixCyan',
-      'period_mix_cyan',
-      'PeriodMixCyan',
-      'Period Mix Cyan',
-      'Cyan',
-      'cyan',
+    return periodMixMetric(operator, ['gold', 'yellow', 'amber', 'orange'], ['away']) ?? firstMetric(operator, [
       'awayTime',
       'away_time',
       'AwayTime',
