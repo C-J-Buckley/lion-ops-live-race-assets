@@ -281,7 +281,40 @@
       return value;
     }
     if (typeof value === 'object') {
-      return firstMetric(value, ['value', 'Value', 'hours', 'Hours', 'time', 'Time', 'duration', 'Duration', 'total', 'Total', 'minutes', 'Minutes', 'seconds', 'Seconds']);
+      return firstMetric(value, [
+        'hours',
+        'Hours',
+        'timeHours',
+        'TimeHours',
+        'durationHours',
+        'DurationHours',
+        'totalHours',
+        'TotalHours',
+        'minutes',
+        'Minutes',
+        'timeMinutes',
+        'TimeMinutes',
+        'durationMinutes',
+        'DurationMinutes',
+        'totalMinutes',
+        'TotalMinutes',
+        'seconds',
+        'Seconds',
+        'timeSeconds',
+        'TimeSeconds',
+        'durationSeconds',
+        'DurationSeconds',
+        'totalSeconds',
+        'TotalSeconds',
+        'value',
+        'Value',
+        'time',
+        'Time',
+        'duration',
+        'Duration',
+        'total',
+        'Total'
+      ]);
     }
     const text = String(value).trim();
     if (!text || ['--', 'n/a', 'na', 'not started'].includes(text.toLowerCase())) return null;
