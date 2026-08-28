@@ -888,8 +888,8 @@
           total,
           projected: projected(total, timestamp),
           sessions: sessions(operator),
-          away: directAway ?? pagePeriodMix?.away,
-          setup: directSetup ?? pagePeriodMix?.setup
+          away: pagePeriodMix?.away ?? directAway,
+          setup: pagePeriodMix?.setup ?? directSetup
         };
       })
       .filter(operator => operator.locker !== '--')
