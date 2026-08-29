@@ -77,7 +77,7 @@
     ['Curtis Trahan', '19'],
     ['Dhanasekar Jayanthi', '20'],
     ['Casey Pollock', '21'],
-    ['Jadrien Malakai Lopez', '22'],
+    ['Nhung Do', '22'],
     ['Oscar Duran', '23'],
     ['William Robinson III', '24'],
     ['Andrew Flores', '25'],
