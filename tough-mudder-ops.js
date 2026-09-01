@@ -99,7 +99,7 @@
     ['Tauane Tome', '41'],
     ['Arman Ara Apoyan', '42'],
     ['Timothy Keller', '43'],
-    ['Ethan Hiew', '44'],
+    ['Ellis Atkins', '44'],
     ['Lovedeep Singh', '45'],
     ['Osato Uwoghiren', '46'],
     ['Harold Mark Esguerra', '47'],
