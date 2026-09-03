@@ -70,7 +70,7 @@
     ['Eliezer Domingo', '12'],
     ['Jack Ellis', '13'],
     ['Jaime Monroy', '14'],
-    ['Emiliano Ceja', '15'],
+    ['Brennen Tsang', '15'],
     ['Isaac Fineaso', '16'],
     ['Naing Tun', '17'],
     ['Jakari Wilson', '18'],
@@ -982,7 +982,8 @@
         const pagePeriodMix = pagePeriodMixForOperator(name, pageMix, pageMixCounts, total);
         const directAway = awayTime(operator);
         const directSetup = setupTime(operator);
-        const locker = operatorLocker(operator) ?? labelFor(name, labelCounts);
+        const mappedLocker = labelFor(name, labelCounts);
+        const locker = mappedLocker !== '--' ? mappedLocker : operatorLocker(operator);
         return {
           name,
           locker,
@@ -1413,7 +1414,7 @@
 
   function courseHtml(operators) {
     const now = new Date();
-    const rows = operators.slice(0, C.maxStations);
+    const rows = operators;
     if (!rows.length) return '<div class="lane" style="top:0"><span class="lane-label">--</span></div>';
     const courseNode = $('rol-course');
     const runnerSize = parseFloat(getComputedStyle(courseNode || document.documentElement).getPropertyValue('--runner-size')) || 49;
@@ -1669,6 +1670,16 @@
       if (state.lastPayload) render(state.lastPayload);
     }, 120);
   }
+
+  window.toughMudderOpsDebug = () => {
+    const operators = state.lastPayload?.operators || [];
+    return {
+      operators,
+      locker44: operators.find(operator => String(operator.locker) === '44') || null,
+      ellisAtkins: operators.find(operator => normalizeNameKey(operator.name).includes('ellis atkins')) || null,
+      activeOperators: operators.filter(operator => hasActivity(operator) && !operator.inactive)
+    };
+  };
 
   installStyles();
   const overlay = createOverlay();
