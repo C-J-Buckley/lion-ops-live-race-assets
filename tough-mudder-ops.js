@@ -63,12 +63,11 @@
     ['Bryan Sogelau', '5'],
     ["Ja'meisha R", '6'],
     ['Christian Surguy', '7'],
-    ['Jasmine Martinez', '8'],
     ['Joshua Ahanonu', '9'],
     ['Diaviaun Agee', '10'],
     ['Eric Rodriguez', '11'],
     ['Eliezer Domingo', '12'],
-    ['Jack Ellis', '13'],
+    ['Seanna Moreno', '13'],
     ['Jaime Monroy', '14'],
     ['Brennen Tsang', '15'],
     ['Isaac Fineaso', '16'],
@@ -101,15 +100,15 @@
     ['Timothy Keller', '43'],
     ['Ellis Atkins', '44'],
     ['Lovedeep Singh', '45'],
-    ['Osato Uwoghiren', '46'],
+    ['Betsy Espinoza', '46'],
     ['Harold Mark Esguerra', '47'],
     ['Jason Thomas', '48'],
     ['Joel Polanco-Canales', '49'],
     ['Marion Morehead', '50'],
-    ['Dimitric Robertson', '51'],
-    ['Birhanu Hagos', '52'],
-    ['Andre Ennon', '53'],
-    ['Mukul Ved', '54']
+    ['Gaurav Dinesh Pawar', '51'],
+    ['Mukul Ved', '52'],
+    ['Birhanu Hagos', '53'],
+    ['Andre Ennon', '54']
   ];
 
   const ANNOUNCER_REMINDERS = [
