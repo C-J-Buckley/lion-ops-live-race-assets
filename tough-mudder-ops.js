@@ -63,6 +63,7 @@
     ['Bryan Sogelau', '5'],
     ["Ja'meisha R", '6'],
     ['Christian Surguy', '7'],
+    ['Darion B', '8'],
     ['Joshua Ahanonu', '9'],
     ['Diaviaun Agee', '10'],
     ['Eric Rodriguez', '11'],
