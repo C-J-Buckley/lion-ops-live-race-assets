@@ -47,7 +47,7 @@
     minCurrentHours: 0.05,
     inactiveMs: 45 * 60 * 1000,
     maxStations: 27,
-    maxLockerNumber: 54,
+    maxLockerNumber: 57,
     breaks: [
       { label: '1ST BREAK', message: 'LION OPS LIVE RACE will return after Break', hour: 0, minute: 30, durationMin: 15 },
       { label: 'LUNCH', message: 'LION OPS LIVE RACE will return after Lunch', hour: 2, minute: 30, durationMin: 30 },
@@ -108,7 +108,10 @@
     ['Gaurav Dinesh Pawar', '51'],
     ['Mukul Ved', '52'],
     ['Birhanu Hagos', '53'],
-    ['Andre Ennon', '54']
+    ['Andre Ennon', '54'],
+    ['Diyari Ugapo', '55'],
+    ['Kayvoss Lewis', '56'],
+    ['Kendal Peters', '57']
   ];
 
   const ANNOUNCER_REMINDERS = [
